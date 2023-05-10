@@ -1,0 +1,46 @@
+{
+  "name": "strategy",
+  "version": "1.0.0",
+  "description": "strategy",
+  "main": "index.js",
+  "scripts": {
+    "migrate": "truffle migrate --reset",
+    "test": "truffle test"
+  },
+  "dependencies": {
+    "@babel/register": "^7.21.0",
+    "@marko/express": "^2.1.0",
+    "@openzeppelin/contracts": "^4.8.3",
+    "@truffle/hdwallet-provider": "^2.1.1",
+    "alchemy-sdk": "^2.8.2",
+    "babel-polyfill": "^6.26.0",
+    "chai": "^4.3.7",
+    "chai-as-promised": "^7.1.1",
+    "docker": "^1.0.0",
+    "dotenv": "^16.0.3",
+    "etherscan": "^0.2.2",
+    "install": "^0.13.0",
+    "mocha": "^10.2.0",
+    "mocha-puppeteer": "^0.14.0",
+    "npm": "^9.6.5",
+    "solc": "^0.8.19",
+    "truffle-contract-size": "^2.0.1",
+    "truffle-hdwallet-provider": "^1.0.17",
+    "truffle-plugin-verify": "^0.6.3",
+    "web3": "^1.8.1",
+    "web3-eth-contract": "^1.8.1"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JIMMI74/project_work_course_blockchaincode.git"
+  },
+  "author": "JIMMI74",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JIMMI74/project_work_course_blockchaincode/issues"
+  },
+  "homepage": "https://github.com/JIMMI74/project_work_course_blockchaincode#readme"
+}

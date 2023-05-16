@@ -4,12 +4,12 @@ pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract CashToken is ERC20, Ownable {
+contract USDTCash is ERC20, Ownable {
     event Mint(address indexed to, uint256 amount);
 
-    constructor() ERC20("CashToken", "CHT") {
-        _mint(address(this), 2000000000000 * 10 ** decimals());
-        _mint(owner(), 2000000000000 * 10 ** decimals());
+    constructor() ERC20("USDTCash", "USC") {
+        _mint(address(this), 50000000000000 * 10 ** decimals());
+        _mint(owner(), 50000000000000 * 10 ** decimals());
     }
 
     function mint(address account, uint256 amount) public onlyOwner {

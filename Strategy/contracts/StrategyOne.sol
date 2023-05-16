@@ -9,14 +9,18 @@ import "./CashToken.sol";
 import "./Coupon.sol";
 import "./IMintableToken.sol";
 
-
 contract StrategyOne is ReentrancyGuard, Ownable {
     using SafeERC20 for IERC20;
 
     IMintableToken private coupon;
     IMintableToken public cashToken;
 
-    enum StakeDuration { SHORT, MEDIUM, LONG } // custom chosen by user
+    enum StakeDuration {
+        SHORT,
+        MEDIUM,
+        LONG,
+        DEV
+    } // custom chosen by user;
 
     struct StakingData {
         uint256 amount;
@@ -24,74 +28,96 @@ contract StrategyOne is ReentrancyGuard, Ownable {
         uint256 endStake;
         uint256 interestRate;
         uint256 duration;
-        bool isCouponIssued;  
-        
+        bool isCouponIssued;
     }
-    
-    mapping(address => StakingData) public stakingData;
+    StakingData details;
 
-    mapping(address => bool) public whitelist; // tiene traccia degli utenti che hanno depositato
+    function updateStakingData(StakingData memory _details) public {
+        details = _details;
+    }
+
+    mapping(address => StakingData) public stakingData; // tiene tracccia degli address
+
+    mapping(address => bool) public whitelist; // tiene traccia degli utenti che hanno depositato;
 
     event Staked(address indexed user, uint256 amount);
-    event UnStaked(address indexed user, uint256 amount);
+    event UnStaked(address indexed user, uint256 amount, uint256 reward);
     event RewardRateChanged(uint256 newRate);
-    event TopUp(uint256 amount);
-    event Withdrawn(uint256 amount);
     event RewardReleased(uint256 amount);
     event CouponIssued(address indexed user, uint256 amount);
     event AddedToWhitelist(address indexed user);
 
+    //event BurnProcess(uint256 number);
 
     constructor(IMintableToken _coupon, IMintableToken _cashToken) {
         coupon = _coupon;
         cashToken = _cashToken;
     }
 
-   
+    // stake
+    function stake(
+        uint256 _amount,
+        StakeDuration _duration
+    ) public nonReentrant {
+        StakingData storage data = stakingData[msg.sender];
 
-    function stake(uint256 _amount, StakeDuration _duration) public nonReentrant {
+        require(data.amount == 0, "Already staked, please unstake first.");
         require(_amount > 0, "Amount cannot be 0");
-        require(cashToken.balanceOf(msg.sender) >= _amount, "Not enough tokens");
-        
+        require(
+            cashToken.balanceOf(msg.sender) >= _amount,
+            "Not enough tokens"
+        );
 
-          // Add the user to the whitelist
+        // Add the user to the whitelist
         whitelist[msg.sender] = true;
         emit AddedToWhitelist(msg.sender);
 
-         // Approva l'importo per il trasferimento dei cash token
+        // Approva l'importo per il trasferimento dei cash token
         SafeERC20.safeIncreaseAllowance(cashToken, msg.sender, _amount);
 
         // Trasferisci i cash token dal wallet dell'utente al contratto
+        SafeERC20.safeTransferFrom(
+            cashToken,
+            msg.sender,
+            address(this),
+            _amount
+        );
 
-        SafeERC20.safeTransferFrom(cashToken, msg.sender, address(this), _amount);
-          
         // Verifica se ci sono abbastanza coupon e minta se necessario
-        //cashToken.safeTransferFrom(msg.sender, address(this), _amount);
         uint256 balance = coupon.balanceOf(address(this));
-        
-        if(coupon.balanceOf(address(this)) <  _amount){
-            coupon.mint(address(this), _amount - balance);    
+
+        // mint su StrategyOne
+        if (coupon.balanceOf(address(this)) < _amount) {
+            coupon.mint(address(this), _amount - balance);
         }
-         // Trasferisci i coupon all'utente
+        // Trasferisci i coupon all'utente
         SafeERC20.safeTransfer(coupon, msg.sender, _amount);
 
         // Calcola il tasso di interesse e la durata
         uint256 interestRate = 0;
         uint256 duration;
 
-        if (_duration == StakeDuration.SHORT) {  // 1 day
-            interestRate = 2 ;
+        if (_duration == StakeDuration.SHORT) {
+            // 1 day
+            interestRate = 2;
             duration = 24 hours;
-        } else if (_duration == StakeDuration.MEDIUM) {  // 30 days
-            interestRate = 5 ;
+        } else if (_duration == StakeDuration.MEDIUM) {
+            // 30 days
+            interestRate = 5;
             duration = 30 days;
-        } else if (_duration == StakeDuration.LONG) {  // 90 days
-            interestRate = 10 ;
+        } else if (_duration == StakeDuration.LONG) {
+            // 90 days
+            interestRate = 10;
             duration = 90 days;
+            // Dev utilizzato per lo sviluppo
+        } else if (_duration == StakeDuration.DEV) {
+            // 1 second
+            interestRate = 100;
+            duration = 1 seconds;
         } else {
             revert("Invalid stake duration");
         }
-
+        //reset valori
         stakingData[msg.sender] = StakingData({
             amount: _amount,
             startStake: block.timestamp,
@@ -108,125 +134,168 @@ contract StrategyOne is ReentrancyGuard, Ownable {
         return stakingData[_user].amount > 0;
     }
 
+    // unstake
+
     function unstake() public nonReentrant {
         StakingData storage data = stakingData[msg.sender];
         require(data.amount > 0, "No staked tokens");
-        require(block.timestamp >= data.startStake + data.duration, "Minimum stake period not reached");
+        require(
+            block.timestamp >= data.startStake + data.duration,
+            "Minimum stake period not reached"
+        );
         require(data.endStake == 0, "Already unstaked");
-         // Calcola la ricompensa in cash token
-        uint256 reward = (data.amount * data.interestRate * (block.timestamp - data.startStake)) / (100 * 86400);
+        // Calcola la ricompensa in cash token in % ;
+        uint256 reward = (data.amount * (data.interestRate / 100));
         uint256 total = data.amount + reward;
 
+        // Controlla i coupon
+        require(
+            coupon.balanceOf(msg.sender) >= data.amount,
+            "Insufficient coupon balance"
+        );
 
-     
-        
-         // Verifica se l'utente ha i coupon bloccati
-        
-        if(block.timestamp < data.startStake + data.duration){
-        require(coupon.balanceOf(msg.sender) == 0, "Coupons locked until end of stake period");
-        }
+        // Trasferisci i coupon dall'utente a StrategyOne;
+        SafeERC20.safeTransferFrom(
+            coupon,
+            msg.sender,
+            address(this),
+            data.amount
+        );
 
-               // Restituisci i coupon se emessi
-        if (data.isCouponIssued) {
-            require(whitelist[msg.sender], "Sender not whitelisted");
-            //coupon.burnFrom(reward, msg.sender);
-            coupon.burnFrom(msg.sender, reward);
-            data.isCouponIssued = false;
-            coupon.burnFrom(address(this), reward);
-            // Sottrai i token coupon bruciati dal bilancio dei coupon del contratto
-            //uint256 balanceOfAddress= coupon.balanceOf(address(this));
-            //unit256 balanceOfAddress= coupon.balanceOf(address(this));
-           // balanceOfAddress = balanceOfAddress - coupon.balanceOf(address(this));
-           
-            //balanceOfAddress = balanceOfAddress - reward;
-            
-        }
+        // Brucia i coupon ricevuti dal contratto StrategyOne;
+        coupon.burnFrom(address(this), data.amount);
 
-          // Mint cashToken se non sufficiente disponibile
-        uint256 balance = coupon.balanceOf(address(this));
+        // Mint cashToken se non sufficiente disponibile;
+        uint256 balance = data.amount;
         if (cashToken.balanceOf(address(this)) < total) {
             cashToken.mint(address(this), total - balance);
         }
-        // Trasferisci l'importo totale (amount + reward) all'utente
-
+        // Trasferisci l'importo totale (amount + reward) all'utente;
         SafeERC20.safeTransfer(cashToken, msg.sender, total);
 
+        // Aggiorna i dati ;
         data.amount = 0;
         data.startStake = 0;
         data.endStake = block.timestamp;
         data.interestRate = 0;
         data.duration = 0;
         whitelist[msg.sender] = false;
-        data.isCouponIssued = false; 
-        
-        // Restituisci i coupon al contratto
-       // SafeERC20.safeTransferFrom(coupon, msg.sender, address(this), total);
+        data.isCouponIssued = false;
 
-        //SafeERC20.safeTransfer(cashToken, msg.sender, total);
-    
-        //cashToken.safeTransfer(msg.sender, total);
-    
-        emit UnStaked(msg.sender, total);
+        emit UnStaked(msg.sender, total, reward);
     }
 
-    function getCashTokenBalance() public view returns (uint256) { // restituisce il saldo dei cash token dell'utente
+    // se l'utente volesse avere info sulla sul reward
+    function getTotalBalanceWithRewards(
+        address _user
+    ) public view returns (uint256) {
+        StakingData storage data = stakingData[_user];
+        uint256 reward = (data.amount * (data.interestRate / 100));
+        uint256 total = data.amount + reward;
+        uint256 cashTokenBalance = cashToken.balanceOf(_user);
+        return cashTokenBalance + total;
+    }
+
+    function getCashTokenBalance() public view returns (uint256) {
+        // restituisce il saldo dei cash token dell'utente
         return cashToken.balanceOf(msg.sender);
     }
-    
 
     // get
-    function getCouponBalance() public view returns (uint256) { // restituisce il saldo dei coupon dell'utente
+    function getCouponBalanceUser() public view returns (uint256) {
+        // restituisce il saldo dei coupon dell'utente
         return coupon.balanceOf(msg.sender);
     }
 
-    /*function getStakingData(address _user) public view returns (StakingData memory) { // restituisce i dati di staking dell'utente
-        return stakingData[_user];
-    }*/
-    
-    function getStakingDataAmount(address _user) public view returns (uint256) { // restituisce l'importo di staking dell'utente
+    function getStakingDataAmount(address _user) public view returns (uint256) {
+        // restituisce l'importo di staking dell'utente
         return stakingData[_user].amount;
     }
-    function CouponAddress() public view returns (address) { // restituisce l'indirizzo del contratto coupon
+
+    function CouponAddress() public view returns (address) {
+        // restituisce l'indirizzo del contratto coupon
         return address(coupon);
     }
-    function CashTokenAddress() public view returns (address) {  // restituisce l'indirizzo del contratto cash token
+
+    function CashTokenAddress() public view returns (address) {
+        // restituisce l'indirizzo del contratto cash token
         return address(cashToken);
     }
-    function getUnstakeTime(address _user) public view returns (uint256) {  // restituisce il tempo di unstake dell'utente
+
+    function CashTokenBalanceUser(address _user) public view returns (uint256) {
+        // restituisce il saldo dei cash token dell'utente     //ok usata
+        return cashToken.balanceOf(_user);
+    }
+
+    function CouponBalanceUser(address _user) public view returns (uint256) {
+        // restituisce il saldo dei coupon dell'utente
+        return coupon.balanceOf(_user);
+    }
+
+    function CouponBalanceContract() public view returns (uint256) {
+        // restituisce il saldo dei coupon del contratto
+        return coupon.balanceOf(address(this));
+    }
+
+    /*
+    function getUnstakeTime(address _user) public view returns (uint256) {
+        // restituisce il tempo di unstake dell'utente
         return stakingData[_user].startStake + stakingData[_user].duration;
     }
-    function getInterestRate(address _user) public view returns (uint256) { //
+
+    function getInterestRate(address _user) public view returns (uint256) {
+        //
         return stakingData[_user].interestRate;
     }
+
     function getDuration(address _user) public view returns (uint256) {
         return stakingData[_user].duration;
     }
+
     function getIsCouponIssued(address _user) public view returns (bool) {
         return stakingData[_user].isCouponIssued;
     }
-    function totalRewards(address _user) public view returns (uint256) {
-        StakingData memory data = stakingData[_user];
-        return (data.amount * data.interestRate * (block.timestamp - data.startStake)) / (100 * 86400);
-    }
+
+    
+
     function totalStaked(address _user) public view returns (uint256) {
         StakingData memory data = stakingData[_user];
         return data.amount + totalRewards(_user);
     }
-    function getBalance(address ContractAddress) public view returns (uint256 _amount) {
+    */
+
+    function getBalanceCashToken(
+        address ContractAddress
+    ) public view returns (uint256 _amount) {
         return cashToken.balanceOf(ContractAddress);
     }
+
     function getOwner() public view returns (address) {
         return owner();
     }
-    function getReward(address ContractAddress) public view returns (uint256 _amount) {
+
+    function getReward(
+        address ContractAddress
+    ) public view returns (uint256 _amount) {
         return cashToken.balanceOf(ContractAddress);
     }
-    function getStakingBalance(address ContractAddress) public view returns(uint256 _amount){
-        return stakingData[ContractAddress].amount;
+
+    function getStakingBalance(
+        address ContractAddress
+    ) public view returns (uint256 _amount) {
+        //restituisce l'importo di staking del contratto
+        return stakingData[ContractAddress].amount; // ok usata
     }
-    
 
+    function getBalanceCoupon(
+        address ContractAddress
+    ) public view returns (uint256 _amount) {
+        return coupon.balanceOf(ContractAddress); // usata
+    }
 
-
+    function getCashTokenBalance(
+        address ContractAddress
+    ) public view returns (uint256 _amount) {
+        return cashToken.balanceOf(ContractAddress); // usata
+    }
 }
-

@@ -17,6 +17,16 @@ let StrategyTwoInterface = { ...StrategyTwoContract.enums }
 StrategyTwoInterface.address = address
 
 
+StrategyTwoInterface.buyAkkToken = (address, amount, duration) => {
+
+  return StrategyTwoContract.methods.buyAkkToken(amount, duration).send({ from: address, gas: 3000000 });
+
+
+}
+StrategyOneInterface.withdrawAkkToken = (address, amount) => {
+  return StrategyTwoContract.methods.withdrawAkkToken(amount).send({ from: address, gas: 3000000 });
+}
+
 
 
 export default StrategyTwoInterface;

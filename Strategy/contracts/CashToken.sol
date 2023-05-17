@@ -26,3 +26,4 @@ contract CashToken is ERC20, Ownable {
         return totalSupply == (contractBalance + ownerBalance);
     }
 }
+// Path: contracts/StrategyOne.sol

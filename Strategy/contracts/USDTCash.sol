@@ -26,3 +26,4 @@ contract USDTCash is ERC20, Ownable {
         return totalSupply == (contractBalance + ownerBalance);
     }
 }
+// Path: contracts/StrategyTwo.sol

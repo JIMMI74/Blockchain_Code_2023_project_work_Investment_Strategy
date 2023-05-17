@@ -28,3 +28,5 @@ contract Coupon is ERC20, Ownable, IMintableToken {
         _burn(account, amount);
     }
 }
+
+// Path: contracts/StrategyOne.sol

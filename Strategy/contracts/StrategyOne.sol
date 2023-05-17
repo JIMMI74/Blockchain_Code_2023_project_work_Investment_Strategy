@@ -237,32 +237,7 @@ contract StrategyOne is ReentrancyGuard, Ownable {
         return coupon.balanceOf(address(this));
     }
 
-    /*
-    function getUnstakeTime(address _user) public view returns (uint256) {
-        // restituisce il tempo di unstake dell'utente
-        return stakingData[_user].startStake + stakingData[_user].duration;
-    }
 
-    function getInterestRate(address _user) public view returns (uint256) {
-        //
-        return stakingData[_user].interestRate;
-    }
-
-    function getDuration(address _user) public view returns (uint256) {
-        return stakingData[_user].duration;
-    }
-
-    function getIsCouponIssued(address _user) public view returns (bool) {
-        return stakingData[_user].isCouponIssued;
-    }
-
-    
-
-    function totalStaked(address _user) public view returns (uint256) {
-        StakingData memory data = stakingData[_user];
-        return data.amount + totalRewards(_user);
-    }
-    */
 
     function getBalanceCashToken(
         address ContractAddress

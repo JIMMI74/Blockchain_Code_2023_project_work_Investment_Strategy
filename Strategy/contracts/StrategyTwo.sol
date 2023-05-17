@@ -43,6 +43,7 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
         uint256 cashTokenAmount,
         uint256 akkTokenAmount,
         AccumulationDuration duration
+
     );
     event CashTokenWithdrawn(address indexed user, uint256 cashTokenAmount);
     event RateSet(uint256 rate);
@@ -50,6 +51,7 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
     event AddedToWhitelist(address indexed user);
     event AkkTokenBalanceUpdated(address indexed user, uint256 amount);
     event AkkTokenRemaining(uint256 amount);
+    event debug(address add,uint256 amm);
 
     // Dichiarazione del costruttore per inizializzare le variabili di stato
     constructor(address _akkToken, address _usdtCash, uint256 _rate) {
@@ -188,11 +190,14 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
         return usdtCash.balanceOf(msg.sender);
     }
 
-    // get
-    function getAkTokenBalanceUser() public view returns (uint256) {
+    
+   
+     function getMyAkTokenBalanceUser() public view returns (uint256 _amount) {
         // restituisce il saldo dei AkToken dell'utente
+        //emit debug(msg.sender,akkToken.balanceOf(msg.sender));
         return akkToken.balanceOf(msg.sender);
     }
+    
    function getBalanceAkTokenStTwo(
         address ContractAddress
     ) public view returns (uint256 _amount) {
@@ -204,6 +209,10 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
     ) public view returns (uint256 _amount) {
         return usdtCash.balanceOf(ContractAddress); 
     }
+
+    //function getAkTokenBalanceUser() public view returns (uint256 _amount) {
+    //    return users[msg.sender].balance; 
+   // }
 }
 
 // second Strategy

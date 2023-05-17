@@ -11,20 +11,23 @@ console.log(Object.keys(USDTCashContract.methods).filter((val) => val.includes('
 console.log(Object.keys(USDTCashContract.methods).filter((val) => !val.includes('(')));
 
 
-async function getBalanceOf(address) {
-  const result = await USDTCashContract.methods.balanceOf(address).call()
 
+
+function BalanceUserUSDTCash(address) {
+  const result = USDTCashContract.methods.balanceOf(address).call()
+  console.log(result, 'BalanceUser USDTCash')
   return result
+
 }
+
+
+
 function approve(beneficiary, amount, customer) {
 
   return USDTCashContract.methods.approve(beneficiary, amount).send({ from: customer, gas: 3000000 })
 
 }
 /*
-async function CashTokenBalanceUser(address) {
-  return CashTokenContract.methods.balanceOf(address).call()
-}
 
 function chaeckAllowanceTo(address) {
   return CashTokenContract.methods.allowance(address, StrategyOneInterface.address).call()
@@ -34,5 +37,5 @@ async function checkAllowanceFrom(address) {
 }
 */
 
-const CahTokenInterface = { getBalanceOf, approve }
-export default CahTokenInterface
+const USDTCashInterface = { BalanceUserUSDTCash, approve }
+export default USDTCashInterface

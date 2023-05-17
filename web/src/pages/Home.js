@@ -1,17 +1,19 @@
-import { useEffect, useState } from "react";
-import "../App.css";
-import Navbar from "../components/Navbar";
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 import CashTokenInterface from "../utils/CashTokenInterface";
 import USDTCashInterface from "../utils/USDTCashInterface";
 import StrategyTwoInterface from "../utils/StrategyTwoInterface";
 import AkTokenInterface from "../utils/AkTokenInterface";
+import StrategyOneInterface from "../utils/StrategyOneInterface";
+import "react-notifications/lib/notifications.css";
+import { Card, Row, Col } from 'react-bootstrap';
+import { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
+import FormStake from "../components/FormStake";
+import FormAcc from "../components/FormAcc";
 import Web3 from "web3";
 import React from "react";
 import Form from "./Form";
-import StrategyOneInterface from "../utils/StrategyOneInterface";
-import "react-notifications/lib/notifications.css";
-import { NotificationContainer, NotificationManager } from 'react-notifications';
-import { Card, Row, Col } from 'react-bootstrap';
+import "../App.css";
 
 
 
@@ -24,6 +26,8 @@ const Home = () => {
   const [balanceCouponUser, setBalanceCouponUser] = useState(0);
   const [balanceAkTokenStTwo, setBalanceAkTokenStTwo] = useState(0)
   const [balanceUSTDStTwo, setBalanceUSDTStTwo] = useState(0)
+  const [BalanceUserUSDT, setBalanceUserUSDT] = useState(0)
+  const [BalanceUserAKToken, setBalanceUserAKToken] = useState(0)
 
 
   useEffect(() => {
@@ -60,9 +64,13 @@ const Home = () => {
           );
       }
     );
+    const eventDebug = StrategyTwoInterface.debug().on('data', (dati) => {
+      console.error('EVENT DEBUG', dati.returnValues)
+    })
     return () => {
       eventStaked.unsubscribe(); // termina listener x nn farlo sovrapporre 
       eventUnStaked.unsubscribe();
+      eventDebug.unsubscribe();
     }
   }, [account]);
 
@@ -113,6 +121,8 @@ const Home = () => {
     LoadBalanceCouponReleasedUser();
     LoadBalanceAkTokenStTwo();
     LoadBalanceUSDTStTwo()
+    LoadBalanceUserUSDTCash()
+    LoadBalanceUserAkToken()
 
   }
   async function handleAccountsChanged(accounts) {
@@ -124,7 +134,7 @@ const Home = () => {
 
   async function loadBalanceCashToken() {
     console.log(StrategyOneInterface.address);
-    StrategyOneInterface.getCashTokenBalance(StrategyOneInterface.address)
+    StrategyOneInterface.getCashTokenBalance(StrategyOneInterface.address)    //Address CashToken StratgeyOne
       .then((result) => {
         console.log('Cash Token Balance StrategyOne', { result })
         if (result !== undefined) setBalanceCashToken(window.web3.utils.fromWei(result, "ether"));
@@ -136,7 +146,7 @@ const Home = () => {
 
   async function loadBalanceCoupon() {
     console.log(StrategyOneInterface.address);
-    StrategyOneInterface.getBalanceCoupon(StrategyOneInterface.address)
+    StrategyOneInterface.getBalanceCoupon(StrategyOneInterface.address)       //Address Coupon StratgeyOne
       .then((result) => {
         console.log('Balance Coupon StrategyOne', { result })
         if (result !== undefined) setBalanceCoupon(window.web3.utils.fromWei(result, "ether"));
@@ -147,7 +157,7 @@ const Home = () => {
   }
 
   async function LoadBalanceCashTokenUser() {
-    console.log(CashTokenInterface.address);
+    console.log(CashTokenInterface.address);                                //Address CashToken USER
     CashTokenInterface.CashTokenBalanceUser(account)
       .then((result) => {
         console.log('Balance User CashToken', { result })
@@ -160,7 +170,7 @@ const Home = () => {
       });
   }
   async function LoadBalanceCouponReleasedUser() {
-    StrategyOneInterface.getBalanceCoupon(account)
+    StrategyOneInterface.getBalanceCoupon(account)    //Address Coupon USER
       .then((result) => {
         console.log('User Coupon Released StrategyOne', { result })
         if (result !== undefined) setBalanceCouponUser(window.web3.utils.fromWei(result, "ether"));
@@ -170,7 +180,8 @@ const Home = () => {
       });
   }
   async function LoadBalanceAkTokenStTwo() {
-    StrategyTwoInterface.getBalanceAkTokenStTwo(account)
+    console.log(StrategyTwoInterface.address, 'Address AkToken Contract StratgeyTwo');//Address AkToken Contract StratgeyTwo
+    StrategyTwoInterface.getBalanceAkTokenStTwo(StrategyTwoInterface.address)
       .then((result) => {
         console.log('AkToken Contract StrategyTwo', { result })
         if (result !== undefined) setBalanceAkTokenStTwo(window.web3.utils.fromWei(result, "ether"));
@@ -180,7 +191,8 @@ const Home = () => {
       });
   }
   async function LoadBalanceUSDTStTwo() {
-    StrategyTwoInterface.getUSDTBalanceStTwo(account)
+    console.log(StrategyTwoInterface.address, 'Address USDT Contrcat StratgeyTwo');  // Addres USDT contract StratgeyTwo
+    StrategyTwoInterface.getUSDTBalanceStTwo(StrategyTwoInterface.address)
       .then((result) => {
         console.log('USDT Cash Contract StrategyTwo', { result })
         if (result !== undefined) setBalanceUSDTStTwo(window.web3.utils.fromWei(result, "ether"));
@@ -189,56 +201,79 @@ const Home = () => {
         console.error('USDT Cash Contract StrategyTwo', { error });
       });
   }
+  async function LoadBalanceUserUSDTCash() {
+    console.log(USDTCashInterface.address, 'Address USDTCash USER');
+    USDTCashInterface.BalanceUserUSDTCash(account)
+      .then((result) => {
+        console.log('USER USDTCASH', { result })
+        if (result !== undefined) setBalanceUserUSDT(window.web3.utils.fromWei(result, "ether"));
+      })
+      .catch((error) => {
+        console.error('USDT Cash Contract StrategyTwo', { error });
+      });
+  }
+  //getAkTokenBalanceUser
+  async function LoadBalanceUserAkToken() {
+    StrategyTwoInterface.getAkTokenBalanceUser()
+      .then((result) => {
+        console.log('USER AKToken', { result })
+        if (result !== undefined) setBalanceUserAKToken(window.web3.utils.fromWei(result, "ether"));
+      })
+      .catch((error) => {
+        console.error('USER AKToken', { error });
+      });
+  }
 
   return (
     <div className="main">
       <Navbar account={account} balanceCashTokenUser={balanceCashTokenUser.toLocaleString()} balanceCouponUser={balanceCouponUser.toLocaleString()} />
       <div className="container">
-        <Form />
+        <FormStake />
       </div>
       <div className="insert">
         <span>
           <h2>qui dobbiamo fare il piano di accumulo</h2>
         </span>
+        <FormAcc />
         <div></div>
       </div>
       <Row className="dashboard">
         <Col className="dashboard-column">
           <Card className="dashboard-card one">
-            <Card.Header className="card-label">StrategyOne CashToken</Card.Header>
+            <Card.Header className="card-label">STAKE CashToken/StrOne</Card.Header>
             <Card.Body>
               <Card.Text className="number">
-                {balanceCashToken.toLocaleString()} Eth
+                {balanceCashToken.toLocaleString()} ETH
               </Card.Text>
             </Card.Body>
           </Card>
         </Col>
         <Col className="dashboard-column">
           <Card className="dashboard-card one">
-            <Card.Header className="card-label">StrategyOne Coupon</Card.Header>
+            <Card.Header className="card-label">STAKE Coupon/StrOne</Card.Header>
             <Card.Body>
               <Card.Text className="number">
-                {balanceCoupon.toLocaleString()} Eth
+                {balanceCoupon.toLocaleString()} ETH
               </Card.Text>
             </Card.Body>
           </Card>
         </Col>
         <Col className="dashboard-column">
           <Card className="dashboard-card one">
-            <Card.Header className="card-label customer">CashToken Customer</Card.Header>
+            <Card.Header className="card-label customer">STAKE CashToken/Customer</Card.Header>
             <Card.Body>
               <Card.Text className="number">
-                {balanceCashTokenUser.toLocaleString()} Eth
+                {balanceCashTokenUser.toLocaleString()} ETH
               </Card.Text>
             </Card.Body>
           </Card>
         </Col>
         <Col className="dashboard-column">
           <Card className="dashboard-card one">
-            <Card.Header className="card-label customer">Coupon Customer</Card.Header>
+            <Card.Header className="card-label customer">STAKE Coupon/Customer</Card.Header>
             <Card.Body>
               <Card.Text className="number">
-                {balanceCouponUser.toLocaleString()} Eth
+                {balanceCouponUser.toLocaleString()} ETH
               </Card.Text>
             </Card.Body>
           </Card>
@@ -247,10 +282,10 @@ const Home = () => {
       <Row className="dashboard">
         <Col className="dashboard-column">
           <Card className="dashboard-card_second">
-            <Card.Header className="card-label_second">Balance AKToken Strategy2</Card.Header>
+            <Card.Header className="card-label_second">ACC. AKToken/StrTwo</Card.Header>
             <Card.Body>
               <Card.Text className="number">
-                {balanceAkTokenStTwo.toLocaleString()} Eth
+                {balanceAkTokenStTwo.toLocaleString()} ETH
               </Card.Text>
             </Card.Body>
           </Card>
@@ -259,10 +294,34 @@ const Home = () => {
       <Row className="dashboard">
         <Col className="dashboard-column">
           <Card className="dashboard-card_second">
-            <Card.Header className="card-label_second">Balance AKToken Strategy2</Card.Header>
+            <Card.Header className="card-label_second">ACC. USDT/StrTwo</Card.Header>
             <Card.Body>
               <Card.Text className="number">
-                {balanceUSTDStTwo.toLocaleString()} Eth
+                {balanceUSTDStTwo.toLocaleString()} ETH
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+      <Row className="dashboard">
+        <Col className="dashboard-column">
+          <Card className="dashboard-card_second">
+            <Card.Header className="card-label_second">ACC. USDT/Customer </Card.Header>
+            <Card.Body>
+              <Card.Text className="number">
+                {BalanceUserUSDT.toLocaleString()} ETH
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+      <Row className="dashboard">
+        <Col className="dashboard-column">
+          <Card className="dashboard-card_second">
+            <Card.Header className="card-label_second">ACC. AKToken/Customer </Card.Header>
+            <Card.Body>
+              <Card.Text className="number">
+                {BalanceUserAKToken.toLocaleString()} ETH
               </Card.Text>
             </Card.Body>
           </Card>

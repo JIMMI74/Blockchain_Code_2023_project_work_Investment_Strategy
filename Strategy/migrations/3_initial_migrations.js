@@ -18,24 +18,29 @@ module.exports = async function (deployer, network, accounts) {
   console.log("Deployed StrategyTWO at address: ", StrategyTwoContract.address);
 
   // Transfer Ak Token => StrategyTwo contract
-  const transferAkAmount = web3.utils.toBN('20000000000000000000');
+  const transferAkAmount = web3.utils.toBN('2200');
   await akToken.transfer(StrategyTwoContract.address, transferAkAmount);
   console.log(`Transferred ${transferAkAmount} Ak tokens to StrategyTWO contract`, StrategyTwoContract.address);
 
-  const usdtCashAmount = web3.utils.toBN('30000000000000000000');
+  const usdtCashAmount = web3.utils.toBN('33000000000000000000');
   await usdtCash.transfer(StrategyTwoContract.address, usdtCashAmount);
   console.log(`Transferred ${usdtCashAmount} USDT tokens to StrategyTWO contract`, StrategyTwoContract.address);
 
 
   // Transfer some tokens to accounts for testing purposes
-  const trasferUsdtCashAmount = web3.utils.toBN('400000000000000000000');
+  const trasferUsdtCashAmount = web3.utils.toBN('440000000000000000000');
   await usdtCash.transfer(accounts[1], trasferUsdtCashAmount);
   console.log(usdtCash.address, accounts[1], trasferUsdtCashAmount)
+
+  // Transfer some tokens to accounts for testing purposes
+  //const trasferAkkTokenAmount = web3.utils.toBN('123');
+  //await akToken.transfer(accounts[1], trasferAkkTokenAmount);
+  //console.log(akToken.address, accounts[1], trasferAkkTokenAmount)
 
   await usdtCash.transfer(accounts[2], trasferUsdtCashAmount);
   console.log(`Transferred ${trasferUsdtCashAmount} USDT tokens to account 2`);
 
-  await usdtCash.transfer(accounts[3], '50000000000000');
+  await usdtCash.transfer(accounts[3], '55000000000000');
   console.log(`Transferred 5000000000 USDT tokens to account 3`);
 
   //coupon.AddressStrategyOne(strategyOneContract.address)

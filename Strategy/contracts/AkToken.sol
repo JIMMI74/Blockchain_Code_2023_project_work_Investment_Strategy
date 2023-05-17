@@ -9,8 +9,8 @@ contract AkToken is ERC20, Ownable, IMintableToken {
     event Mint(address indexed to, uint256 amount);
 
     constructor() ERC20("AkToken", "AKT") {
-        _mint(address(this), 2000000000000 * 10 ** decimals());
-        _mint(owner(), 2000000000000 * 10 ** decimals());
+        _mint(address(this), 270000 * 10 ** decimals());
+        _mint(owner(),       280000 * 10 ** decimals());
     }
 
     function mint(address to, uint256 amount) public onlyOwner {

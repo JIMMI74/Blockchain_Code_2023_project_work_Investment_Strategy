@@ -201,11 +201,7 @@ contract StrategyOne is ReentrancyGuard, Ownable {
         return cashToken.balanceOf(msg.sender);
     }
 
-    // get
-    function getCouponBalanceUser() public view returns (uint256) {
-        // restituisce il saldo dei coupon dell'utente
-        return coupon.balanceOf(msg.sender);
-    }
+    
 
     function getStakingDataAmount(address _user) public view returns (uint256) {
         // restituisce l'importo di staking dell'utente
@@ -265,13 +261,17 @@ contract StrategyOne is ReentrancyGuard, Ownable {
     function getBalanceCoupon(
         address ContractAddress
     ) public view returns (uint256 _amount) {
-        return coupon.balanceOf(ContractAddress); // usata
+        return coupon.balanceOf(ContractAddress); // ok
     }
 
     function getCashTokenBalance(
         address ContractAddress
     ) public view returns (uint256 _amount) {
-        return cashToken.balanceOf(ContractAddress); // usata
+        return cashToken.balanceOf(ContractAddress); // ok 
     }
-    
+    // ok 
+    function getCouponBalanceUser() public view returns (uint256) {
+        // restituisce il saldo dei coupon dell'utente
+        return coupon.balanceOf(msg.sender);
+    }
 }

@@ -23,6 +23,8 @@ const Home = () => {
   const [balanceCoupon, setBalanceCoupon] = useState(0);
   const [balanceCouponUser, setBalanceCouponUser] = useState(0);
   const [balanceAkTokenStTwo, setBalanceAkTokenStTwo] = useState(0)
+  const [balanceUSTDStTwo, setBalanceUSDTStTwo] = useState(0)
+
 
   useEffect(() => {
     loadWeb3();
@@ -99,7 +101,9 @@ const Home = () => {
     console.log(networkId);
     setLoading(false);
     const staked = await StrategyOneInterface.stakingData(accounts[0]);
-    console.log({ staked })
+    console.log({ staked });
+    const usersAcc = await StrategyTwoInterface.users(accounts[0]);
+    console.log({ usersAcc });
   }
 
   function reloadAllBalances() {
@@ -108,6 +112,7 @@ const Home = () => {
     loadBalanceCoupon();
     LoadBalanceCouponReleasedUser();
     LoadBalanceAkTokenStTwo();
+    LoadBalanceUSDTStTwo()
 
   }
   async function handleAccountsChanged(accounts) {
@@ -174,6 +179,16 @@ const Home = () => {
         console.error('AkToken Contract StrategyTwo', { error });
       });
   }
+  async function LoadBalanceUSDTStTwo() {
+    StrategyTwoInterface.getUSDTBalanceStTwo(account)
+      .then((result) => {
+        console.log('USDT Cash Contract StrategyTwo', { result })
+        if (result !== undefined) setBalanceUSDTStTwo(window.web3.utils.fromWei(result, "ether"));
+      })
+      .catch((error) => {
+        console.error('USDT Cash Contract StrategyTwo', { error });
+      });
+  }
 
   return (
     <div className="main">
@@ -189,7 +204,7 @@ const Home = () => {
       </div>
       <Row className="dashboard">
         <Col className="dashboard-column">
-          <Card className="dashboard-card">
+          <Card className="dashboard-card one">
             <Card.Header className="card-label">StrategyOne CashToken</Card.Header>
             <Card.Body>
               <Card.Text className="number">
@@ -199,7 +214,7 @@ const Home = () => {
           </Card>
         </Col>
         <Col className="dashboard-column">
-          <Card className="dashboard-card">
+          <Card className="dashboard-card one">
             <Card.Header className="card-label">StrategyOne Coupon</Card.Header>
             <Card.Body>
               <Card.Text className="number">
@@ -209,8 +224,8 @@ const Home = () => {
           </Card>
         </Col>
         <Col className="dashboard-column">
-          <Card className="dashboard-card">
-            <Card.Header className="card-label">CashToken accounts</Card.Header>
+          <Card className="dashboard-card one">
+            <Card.Header className="card-label customer">CashToken Customer</Card.Header>
             <Card.Body>
               <Card.Text className="number">
                 {balanceCashTokenUser.toLocaleString()} Eth
@@ -219,8 +234,8 @@ const Home = () => {
           </Card>
         </Col>
         <Col className="dashboard-column">
-          <Card className="dashboard-card">
-            <Card.Header className="card-label">Coupon Released User</Card.Header>
+          <Card className="dashboard-card one">
+            <Card.Header className="card-label customer">Coupon Customer</Card.Header>
             <Card.Body>
               <Card.Text className="number">
                 {balanceCouponUser.toLocaleString()} Eth
@@ -236,6 +251,18 @@ const Home = () => {
             <Card.Body>
               <Card.Text className="number">
                 {balanceAkTokenStTwo.toLocaleString()} Eth
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+      <Row className="dashboard">
+        <Col className="dashboard-column">
+          <Card className="dashboard-card_second">
+            <Card.Header className="card-label_second">Balance AKToken Strategy2</Card.Header>
+            <Card.Body>
+              <Card.Text className="number">
+                {balanceUSTDStTwo.toLocaleString()} Eth
               </Card.Text>
             </Card.Body>
           </Card>

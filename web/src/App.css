@@ -312,5 +312,12 @@
 .number {
 font-family: 'Times New Roman', Times, serif;
 font-size: 1.3rem;
+}
 
+.customer
+{
+background-color: rgb(23, 128, 234);
+}
+.one{
+  background-color: rgb(99, 217, 88);
 }

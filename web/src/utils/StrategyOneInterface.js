@@ -43,7 +43,6 @@ StrategyOneInterface.getStakingBalance = async (address) => {
 StrategyOneInterface.getBalanceCoupon = async (address) => {
     const result = await StrategyOneContract.methods.getBalanceCoupon(address).call();
 
-    //result = StrategyOneContract.methods.getBalanceCoupon(address).call();
     console.log('Balance Coupon Address StrategyOne', result)
     return result;
 }

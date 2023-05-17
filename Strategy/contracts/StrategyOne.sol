@@ -273,4 +273,5 @@ contract StrategyOne is ReentrancyGuard, Ownable {
     ) public view returns (uint256 _amount) {
         return cashToken.balanceOf(ContractAddress); // usata
     }
+    
 }

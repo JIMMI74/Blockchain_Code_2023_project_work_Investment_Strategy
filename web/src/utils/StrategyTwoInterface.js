@@ -19,11 +19,20 @@ StrategyTwoInterface.address = address
 
 StrategyTwoInterface.getBalanceAkTokenStTwo = async (address) => {
   const result = StrategyTwoContract.methods.getBalanceAkTokenStTwo(address).call();
-  console.log('Balance Akktoken Address StrategyOne', result)
+  console.log('Balance Akktoken Address StrategyTwo', result)
   return result
 }
 
-
+StrategyTwoInterface.getUSDTBalanceStTwo = async (address) => {
+  const result = StrategyTwoContract.methods.getUSDTBalanceStTwo(address).call();
+  console.log('Balance USDTCash Address StrategyTwo', result)
+  return result
+}
+StrategyTwoInterface.users = async (address) => {
+  const result = StrategyTwoContract.methods.users(address).call();
+  console.log(result)
+  return result;
+}
 StrategyTwoInterface.buyAkkToken = (address, amount, duration) => {
 
   return StrategyTwoContract.methods.buyAkkToken(amount, duration).send({ from: address, gas: 3000000 });

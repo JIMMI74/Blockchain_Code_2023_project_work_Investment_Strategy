@@ -11,6 +11,7 @@ import Form from "./Form";
 import StrategyOneInterface from "../utils/StrategyOneInterface";
 import "react-notifications/lib/notifications.css";
 import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { Card, Row, Col } from 'react-bootstrap';
 
 
 
@@ -176,65 +177,73 @@ const Home = () => {
 
   return (
     <div className="main">
-      <Navbar account={account} balanceCashTokenUser={balanceCashTokenUser.toLocaleString()}
-        balanceCouponUser={balanceCouponUser.toLocaleString()}
-      />
+      <Navbar account={account} balanceCashTokenUser={balanceCashTokenUser.toLocaleString()} balanceCouponUser={balanceCouponUser.toLocaleString()} />
       <div className="container">
-        <Form /> {/* Aggiunto il componente Form */}
+        <Form />
       </div>
       <div className="insert">
         <span>
           <h2>qui dobbiamo fare il piano di accumulo</h2>
         </span>
-        <div>
-        </div>
+        <div></div>
       </div>
-      {/* {logo}<a href="paginaperInserimentoDati">Registrati</a> */}
-      <div className="Result">
-        <div className="Div">
-          <h3 className="Texture">
-            StrategyOne CashToken Balance = {balanceCashToken.toLocaleString()}{" "}
-            Eth
-          </h3>
-        </div>
-      </div>
-      <div className="Result">
-        <div className="Div">
-          <h3 className="Texture">
-            StrategyOne Coupon Balance = {balanceCoupon.toLocaleString()}{" "}
-            Eth
-          </h3>
-        </div>
-      </div>
-      <div className="Result">
-        <div className="Div">
-          <h3 className="Texture">
-            CashToken accounts = {balanceCashTokenUser.toLocaleString()}{" "}
-            Eth
-          </h3>
-        </div>
-      </div>
-      <div className="Result">
-        <div className="Div">
-          <h3 className="Texture">
-            Coupon Released User = {balanceCouponUser.toLocaleString()}{" "}
-            Eth
-          </h3>
-        </div>
-      </div>
-      <div className="Result">
-        <div className="Div">
-          <h3 className="Texture">
-            Balance AKToken Strategy2 = {balanceAkTokenStTwo.toLocaleString()}{" "}
-            Eth
-          </h3>
-        </div>
-      </div>
-      < NotificationContainer />
+      <Row className="dashboard">
+        <Col className="dashboard-column">
+          <Card className="dashboard-card">
+            <Card.Header className="card-label">StrategyOne CashToken</Card.Header>
+            <Card.Body>
+              <Card.Text className="number">
+                {balanceCashToken.toLocaleString()} Eth
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col className="dashboard-column">
+          <Card className="dashboard-card">
+            <Card.Header className="card-label">StrategyOne Coupon</Card.Header>
+            <Card.Body>
+              <Card.Text className="number">
+                {balanceCoupon.toLocaleString()} Eth
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col className="dashboard-column">
+          <Card className="dashboard-card">
+            <Card.Header className="card-label">CashToken accounts</Card.Header>
+            <Card.Body>
+              <Card.Text className="number">
+                {balanceCashTokenUser.toLocaleString()} Eth
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col className="dashboard-column">
+          <Card className="dashboard-card">
+            <Card.Header className="card-label">Coupon Released User</Card.Header>
+            <Card.Body>
+              <Card.Text className="number">
+                {balanceCouponUser.toLocaleString()} Eth
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+      <Row className="dashboard">
+        <Col className="dashboard-column">
+          <Card className="dashboard-card_second">
+            <Card.Header className="card-label_second">Balance AKToken Strategy2</Card.Header>
+            <Card.Body>
+              <Card.Text className="number">
+                {balanceAkTokenStTwo.toLocaleString()} Eth
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+      <NotificationContainer />
     </div>
-
-
-
   );
 };
+
 export default Home;

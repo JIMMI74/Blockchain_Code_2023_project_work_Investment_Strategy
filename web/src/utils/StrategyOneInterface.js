@@ -57,7 +57,7 @@ StrategyOneInterface.getCashTokenBalance = async (address) => {
 
 StrategyOneInterface.getCouponBalanceUser = async () => {
     const result = StrategyOneContract.methods.getCouponBalanceUser().call();
-    console.log('Balance Coupon Address StrategyOne', result)
+    console.log('Balance Coupon Address User', result)
     return result;
 }
 

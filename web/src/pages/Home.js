@@ -21,6 +21,7 @@ const Home = () => {
   const [balanceCashTokenUser, setBalanceCashTokenUser] = useState(0);
   const [balanceCoupon, setBalanceCoupon] = useState(0);
   const [balanceCouponUser, setBalanceCouponUser] = useState(0);
+  const [balanceAkTokenStTwo, setBalanceAkTokenStTwo] = useState(0)
 
   useEffect(() => {
     loadWeb3();
@@ -105,6 +106,7 @@ const Home = () => {
     LoadBalanceCashTokenUser();
     loadBalanceCoupon();
     LoadBalanceCouponReleasedUser();
+    LoadBalanceAkTokenStTwo();
 
   }
   async function handleAccountsChanged(accounts) {
@@ -161,6 +163,16 @@ const Home = () => {
         console.error('User Coupon Released StrategyOne', { error });
       });
   }
+  async function LoadBalanceAkTokenStTwo() {
+    StrategyTwoInterface.getBalanceAkTokenStTwo(account)
+      .then((result) => {
+        console.log('AkToken Contract StrategyTwo', { result })
+        if (result !== undefined) setBalanceAkTokenStTwo(window.web3.utils.fromWei(result, "ether"));
+      })
+      .catch((error) => {
+        console.error('AkToken Contract StrategyTwo', { error });
+      });
+  }
 
   return (
     <div className="main">
@@ -206,6 +218,14 @@ const Home = () => {
         <div className="Div">
           <h3 className="Texture">
             Coupon Released User = {balanceCouponUser.toLocaleString()}{" "}
+            Eth
+          </h3>
+        </div>
+      </div>
+      <div className="Result">
+        <div className="Div">
+          <h3 className="Texture">
+            Balance AKToken Strategy2 = {balanceAkTokenStTwo.toLocaleString()}{" "}
             Eth
           </h3>
         </div>

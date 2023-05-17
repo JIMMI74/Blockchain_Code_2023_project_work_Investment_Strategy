@@ -67,7 +67,8 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
         }else if(_duration == AccumulationDuration.FIFTEEN_YEARS){
             return 60*60*24*365*15;
         }else{
-            require(false, "NO VALID DURATION");
+            //require(false, "NO VALID DURATION");
+            revert("NO VALID DURATION");
         }
     }
     function buyAkkToken(
@@ -191,6 +192,17 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
     function getAkTokenBalanceUser() public view returns (uint256) {
         // restituisce il saldo dei AkToken dell'utente
         return akkToken.balanceOf(msg.sender);
+    }
+   function getBalanceAkTokenStTwo(
+        address ContractAddress
+    ) public view returns (uint256 _amount) {
+        return akkToken.balanceOf(ContractAddress); 
+    }
+
+    function getUSDTBalanceStTwo(
+        address ContractAddress
+    ) public view returns (uint256 _amount) {
+        return usdtCash.balanceOf(ContractAddress); 
     }
 }
 

@@ -14,10 +14,22 @@ let AkTokenInterface = { ...AkTokenContract.enums }
 AkTokenInterface.address = address
 
 
-AkTokenInterface.approve = async (beneficiary, amount, customer) => {
-  return AkTokenContract.methods.approve(beneficiary, amount).send({ from: customer, gas: 3000000 })
+
+AkTokenInterface.getBalanceOf = (address) => {
+  const result = AkTokenContract.methods.balanceOf(address).call()
+  console.log('Balance Address AKToken ')
+  return result
+
 
 }
 
+
+AkTokenInterface.approve = async (beneficiary, amount, customer) => {
+  const result = AkTokenContract.methods.approve(beneficiary, amount).send({ from: customer, gas: 3000000 })
+  console.log('Approve AkToken ', result)
+  return result
+
+
+}
 
 export default AkTokenInterface

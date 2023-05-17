@@ -5,7 +5,7 @@ const Contract = require('web3-eth-contract');
 Contract.setProvider('ws://localhost:7545');
 const abi = StrategyTwo.abi;
 const networkId = Object.entries(StrategyTwo.networks)[0][0];
-const address = StrategyTwo.networks[networkId].address;
+export const address = StrategyTwo.networks[networkId].address;
 const StrategyTwoContract = new Contract(abi, address);
 loadEnum(StrategyTwoContract, StrategyTwo.ast);
 console.log(StrategyTwoContract.enums)
@@ -17,13 +17,19 @@ let StrategyTwoInterface = { ...StrategyTwoContract.enums }
 StrategyTwoInterface.address = address
 
 
+StrategyTwoInterface.getBalanceAkTokenStTwo = async (address) => {
+  const result = StrategyTwoContract.methods.getBalanceAkTokenStTwo(address).call();
+  console.log('Balance Akktoken Address StrategyOne', result)
+  return result
+}
+
+
 StrategyTwoInterface.buyAkkToken = (address, amount, duration) => {
 
   return StrategyTwoContract.methods.buyAkkToken(amount, duration).send({ from: address, gas: 3000000 });
-
-
 }
-StrategyOneInterface.withdrawAkkToken = (address, amount) => {
+
+StrategyTwoInterface.withdrawAkkToken = (address, amount) => {
   return StrategyTwoContract.methods.withdrawAkkToken(amount).send({ from: address, gas: 3000000 });
 }
 

@@ -50,7 +50,7 @@ export default function FormAcc() {
     console.log('approve Plane Contract', await USDTCashInterface.approve(StrategyTwoInterface.address, amountEth, accounts[0]))
     console.log('Buy AkToken for Contract PLane', await StrategyTwoInterface.buyAkkToken(accounts[0], amountEth, duration))
   };
-
+  // withdraw con un amount specificato da utente
   const handleWhitdraw = async (event) => {
     event.preventDefault();
     const accounts = await window.web3.eth.getAccounts()
@@ -58,16 +58,16 @@ export default function FormAcc() {
       alert("Per andare avanti devi connetterti a MetaMask!");
       return;
     }
+    // qui fai il controllo della quantita 
     if (!withdrawAmount) {
       alert("You must enter an amount to withdraw!");
       return;
     }
 
-    const withdraw = await StrategyTwoInterface.users(accounts[0]);
-    const amount = withdraw.amount
+    const amountEth = window.web3.utils.toWei(withdrawAmount.toString(), 'ether')
     setDefaultAddressContracts(accounts[0])
-    console.log('approve withdraw', await AkTokenInterface.approve(StrategyTwoInterface.address, amount, accounts[0]))
-    console.log('withdraw', await StrategyTwoInterface.withdrawAkkToken(accounts[0]))
+    console.log('approve withdraw', await AkTokenInterface.approve(StrategyTwoInterface.address, amountEth, accounts[0]))
+    console.log('withdraw', await StrategyTwoInterface.withdrawAkkToken(accounts[0], amountEth).catch((error) => { console.error(error) }))
   };
   const buttonStyle = {
     backgroundColor: "#4CAF50",
@@ -150,3 +150,7 @@ export default function FormAcc() {
 };
 
 
+// 138       140
+//121   120
+// 99          100
+// 2           0

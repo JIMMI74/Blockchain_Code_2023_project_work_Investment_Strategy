@@ -11,14 +11,19 @@ module.exports = async function (deployer, network, accounts) {
   await deployer.deploy(USDTCash);
   const usdtCash = await USDTCash.deployed();
   console.log("Deployed USDTCash at address: ", usdtCash.address);
+  const conversionRate = 2;
 
+
+
+
+  console.log("Conversion rate set to: ", conversionRate);
   // Deploy StrategyTwo contract with USDTJ ,AkToken addresses as parameters
-  await deployer.deploy(StrategyTwo, akToken.address, usdtCash.address, 5);
+  await deployer.deploy(StrategyTwo, akToken.address, usdtCash.address, conversionRate);
   const StrategyTwoContract = await StrategyTwo.deployed();
   console.log("Deployed StrategyTWO at address: ", StrategyTwoContract.address);
 
   console.log({ accounts })
-  await akToken.mint(StrategyTwoContract.address, web3.utils.toBN('2000000000000000000'))
+  //await akToken.mint(StrategyTwoContract.address, web3.utils.toBN('2000000000000000000'))
 
   await akToken.mint(accounts[4], web3.utils.toBN('123'))
   await akToken.mint(accounts[5], web3.utils.toBN('234'))
@@ -29,11 +34,11 @@ module.exports = async function (deployer, network, accounts) {
   // STRATEGY TWO
 
   // Transfer Ak Token => StrategyTwo contract
-  const transferAkAmount = web3.utils.toBN('140000000000000000000');
+  const transferAkAmount = web3.utils.toBN('14');
   await akToken.transfer(StrategyTwoContract.address, transferAkAmount);
   console.log(`from StrategyTwo Transferred ${transferAkAmount} Aktokens to  address :`, StrategyTwoContract.address);
 
-  const usdtCashAmount = web3.utils.toBN('120000000000000000000');
+  const usdtCashAmount = web3.utils.toBN('12');
   await usdtCash.transfer(StrategyTwoContract.address, usdtCashAmount);
   console.log(`from StrategyTwo Transferred ${usdtCashAmount} USDT tokens to address `, StrategyTwoContract.address);
 
@@ -68,8 +73,6 @@ module.exports = async function (deployer, network, accounts) {
   await usdtCash.transferOwnership(StrategyTwoContract.address)
   console.log('owner akToken is ' + await akToken.owner())
   console.log('owner usdtCash is ' + await usdtCash.owner())
-
-
 
 
 }

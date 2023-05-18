@@ -125,7 +125,7 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
 
         if (users[msg.sender].firstDepositTime == 0) {
             // il primo deposito
-            users[msg.sender].firstDepositTime == block.timestamp;
+            users[msg.sender].firstDepositTime = block.timestamp;
             users[msg.sender].duration = _duration;
         }
 
@@ -148,12 +148,12 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
         uint256 akkTokenAmount = _amount;
         //                               20    / 5  => 4
         uint256 usdtCashAmount = akkTokenAmount / rate;
-        //  35                                    30                 10
-        if (block.timestamp <= (users[msg.sender].firstDepositTime +  calculateDuration(users[msg.sender].duration)))
+        //  35                                    30                        10
+        if (block.timestamp <= (users[msg.sender].firstDepositTime +  calculateDuration(users[msg.sender].duration))){
             // true ergo la duration non e finita
             //             100                      1           => 99 >    50
-            require( (users[msg.sender].balance - akkTokenAmount) > MIN_CASH_TOKEN_AMOUNT," Non puoi prelevere quanti token perche superara il limite prima del fine");
-
+            require( MIN_CASH_TOKEN_AMOUNT < (users[msg.sender].balance - akkTokenAmount)  ," Non puoi prelevere tutti i token, ma devi 1ETH fino alla fine della durata del piano di accumulo");
+        }
         users[msg.sender].balance -= akkTokenAmount;
 
         // Trasferisce la quantità di akkToken user => StrategyTwo

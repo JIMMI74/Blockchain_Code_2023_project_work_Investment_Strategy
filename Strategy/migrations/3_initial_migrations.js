@@ -25,6 +25,7 @@ module.exports = async function (deployer, network, accounts) {
   console.log({ accounts })
   //await akToken.mint(StrategyTwoContract.address, web3.utils.toBN('2000000000000000000'))
 
+  //Test prova mint su account[4] account[5] account[6]
   await akToken.mint(accounts[4], web3.utils.toBN('123'))
   await akToken.mint(accounts[5], web3.utils.toBN('234'))
   await akToken.mint(accounts[6], web3.utils.toBN('345'))
@@ -34,11 +35,11 @@ module.exports = async function (deployer, network, accounts) {
   // STRATEGY TWO
 
   // Transfer Ak Token => StrategyTwo contract
-  const transferAkAmount = web3.utils.toBN('14');
+  const transferAkAmount = web3.utils.toBN('140000000000000000000');
   await akToken.transfer(StrategyTwoContract.address, transferAkAmount);
   console.log(`from StrategyTwo Transferred ${transferAkAmount} Aktokens to  address :`, StrategyTwoContract.address);
 
-  const usdtCashAmount = web3.utils.toBN('12');
+  const usdtCashAmount = web3.utils.toBN('120000000000000000000');
   await usdtCash.transfer(StrategyTwoContract.address, usdtCashAmount);
   console.log(`from StrategyTwo Transferred ${usdtCashAmount} USDT tokens to address `, StrategyTwoContract.address);
 
@@ -73,6 +74,8 @@ module.exports = async function (deployer, network, accounts) {
   await usdtCash.transferOwnership(StrategyTwoContract.address)
   console.log('owner akToken is ' + await akToken.owner())
   console.log('owner usdtCash is ' + await usdtCash.owner())
+
+
 
 
 }

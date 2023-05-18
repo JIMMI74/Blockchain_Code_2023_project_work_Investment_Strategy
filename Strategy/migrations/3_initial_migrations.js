@@ -20,36 +20,50 @@ module.exports = async function (deployer, network, accounts) {
   console.log({ accounts })
   await akToken.mint(StrategyTwoContract.address, web3.utils.toBN('2000000000000000000'))
 
-  await akToken.mint(accounts[0], web3.utils.toBN('123'))
-  await akToken.mint(accounts[1], web3.utils.toBN('234'))
-  await akToken.mint(accounts[2], web3.utils.toBN('345'))
-  await akToken.mint(accounts[3], web3.utils.toBN('456'))
-  await akToken.mint(accounts[4], web3.utils.toBN('567'))
+  await akToken.mint(accounts[4], web3.utils.toBN('123'))
+  await akToken.mint(accounts[5], web3.utils.toBN('234'))
+  await akToken.mint(accounts[6], web3.utils.toBN('345'))
   // transfer ownership 
 
-  /*
-    // Transfer Ak Token => StrategyTwo contract
-    const transferAkAmount = web3.utils.toBN('1000000000000000000');
-    await akToken.transfer(StrategyTwoContract.address, transferAkAmount);
-    console.log(`Transferred ${transferAkAmount} Ak tokens to StrategyTWO contract`, StrategyTwoContract.address);
-  */
-  const usdtCashAmount = web3.utils.toBN('3000000000000000000');
-  await usdtCash.transfer(StrategyTwoContract.address, usdtCashAmount);
-  console.log(`Transferred ${usdtCashAmount} USDT tokens to StrategyTWO contract`, StrategyTwoContract.address);
 
+  // STRATEGY TWO
+
+  // Transfer Ak Token => StrategyTwo contract
+  const transferAkAmount = web3.utils.toBN('1200000000000000000');
+  await akToken.transfer(StrategyTwoContract.address, transferAkAmount);
+  console.log(`from StrategyTwo Transferred ${transferAkAmount} Aktokens to  address :`, StrategyTwoContract.address);
+
+  const usdtCashAmount = web3.utils.toBN('1300000000000000000');
+  await usdtCash.transfer(StrategyTwoContract.address, usdtCashAmount);
+  console.log(`from StrategyTwo Transferred ${usdtCashAmount} USDT tokens to address `, StrategyTwoContract.address);
+
+
+  // ACCOUNTS
 
   // Transfer some tokens to accounts for testing purposes
-  const trasferUsdtCashAmount = web3.utils.toBN('44000000000000000000');
-  await usdtCash.transfer(accounts[1], trasferUsdtCashAmount);
-  console.log(usdtCash.address, accounts[1], trasferUsdtCashAmount)
+  const TransferAmount_1 = web3.utils.toBN('100000000000000000000');
+  await usdtCash.transfer(accounts[1], TransferAmount_1);
+  console.log(usdtCash.address, accounts[1], TransferAmount_1)
+  console.log(accounts[1], 'Account[1] CashTokne address is =', usdtCash.address, "Totale =", TransferAmount_1)
+  console.log(` from account ${accounts[1]}Transferred ${TransferAmount_1} CashToken, address is:`, usdtCash.address);
 
-  await usdtCash.transfer(accounts[2], trasferUsdtCashAmount);
-  console.log(`Transferred ${trasferUsdtCashAmount} USDT tokens to account 2`);
+  const TransferAmount_2 = web3.utils.toBN('5000000000000000000');
+  await usdtCash.transfer(accounts[2], TransferAmount_2);
+  console.log(accounts[2], 'Account[2] CashTokne address is =', usdtCash.address, "Totale =", TransferAmount_2)
+  console.log(` from account ${accounts[2]}Transferred ${TransferAmount_2} CashToken, address is:`, usdtCash.address);
 
-  await usdtCash.transfer(accounts[3], '50000000000000');
-  console.log(`Transferred 5000000000 USDT tokens to account 3`);
+  const TransferAmount_3 = web3.utils.toBN('7000000000000000000');
+  await usdtCash.transfer(accounts[3], TransferAmount_3);
+  console.log(accounts[3], 'Account[3] CashTokne address is =', usdtCash.address, "Totale =", TransferAmount_3)
+  console.log(` from account ${accounts[3]}Transferred ${TransferAmount_3} CashToken, address is:`, usdtCash.address);
 
-  //coupon.AddressStrategyOne(strategyOneContract.address)
+
+  console.log('accounts[1] balance is ' + await usdtCash.balanceOf(accounts[1]))
+  console.log('accounts[2] balance is ' + await usdtCash.balanceOf(accounts[2]))
+  console.log('accounts[3] balance is ' + await usdtCash.balanceOf(accounts[3]))
+
+  // Transfer ownership of AkToken and CashToken to StrategyTwo contract
+
   await akToken.transferOwnership(StrategyTwoContract.address)
   await usdtCash.transferOwnership(StrategyTwoContract.address)
   console.log('owner akToken is ' + await akToken.owner())

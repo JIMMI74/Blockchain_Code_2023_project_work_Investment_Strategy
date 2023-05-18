@@ -6,7 +6,7 @@ Contract.setProvider('ws://localhost:7545');
 const abi = Coupon.abi;
 const networkId = Object.entries(Coupon.networks)[0][0];
 const address = Coupon.networks[networkId].address;
-const CouponContract = new Contract(abi, address);
+export const CouponContract = new Contract(abi, address);
 //loadEnum(CouponContract, Coupon.ast);
 //console.log(CouponContract.enums)
 console.log(CouponContract)

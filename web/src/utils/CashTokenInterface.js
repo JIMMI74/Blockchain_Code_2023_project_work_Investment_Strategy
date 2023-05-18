@@ -4,8 +4,8 @@ const Contract = require('web3-eth-contract');
 Contract.setProvider('ws://localhost:7545');
 const abi = CashToken.abi;
 export const networkId = Object.entries(CashToken.networks)[0][0];
-export const address = CashToken.networks[networkId].address;
-const CashTokenContract = new Contract(abi, address);
+const address = CashToken.networks[networkId].address;
+export const CashTokenContract = new Contract(abi, address);
 console.log(CashTokenContract, CashTokenContract.methods)
 console.log(Object.keys(CashTokenContract.methods).filter((val) => val.includes('(')));
 console.log(Object.keys(CashTokenContract.methods).filter((val) => !val.includes('(')));

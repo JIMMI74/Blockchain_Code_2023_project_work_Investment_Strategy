@@ -5,7 +5,7 @@ Contract.setProvider('ws://localhost:7545');
 const abi = USDTCash.abi;
 export const networkId = Object.entries(USDTCash.networks)[0][0];
 export const address = USDTCash.networks[networkId].address;
-const USDTCashContract = new Contract(abi, address);
+export const USDTCashContract = new Contract(abi, address);
 console.log(USDTCashContract, USDTCashContract.methods)
 console.log(Object.keys(USDTCashContract.methods).filter((val) => val.includes('(')));
 console.log(Object.keys(USDTCashContract.methods).filter((val) => !val.includes('(')));

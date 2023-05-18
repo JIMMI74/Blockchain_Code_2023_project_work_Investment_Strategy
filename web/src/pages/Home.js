@@ -14,6 +14,7 @@ import Web3 from "web3";
 import React from "react";
 import Form from "./Form";
 import "../App.css";
+import setDefaultAddressContracts from '../utils/setDefaultAddressContracts';
 
 
 
@@ -33,12 +34,14 @@ const Home = () => {
   useEffect(() => {
     loadWeb3();
     loadBlockchainData();
+    if (account) reloadAllBalances();
+
     const eventStaked = StrategyOneInterface.Staked().on("data", (dati) => {
       console.log('EVENT STAKED', { dati })
       const blockNumber = dati.blockNumber;
       const { user, amount } = dati.returnValues;
       console.log("user", user);
-      if (user === account)
+      if (user === account) {
 
         NotificationManager.success(
           "Complimenti !! Hai messo in Staking " +
@@ -46,6 +49,8 @@ const Home = () => {
           " CashToken. BN: " +
           blockNumber
         );
+        reloadAllBalances();
+      }
     })
     const eventUnStaked = StrategyOneInterface.UnStaked().on(
       "data",
@@ -53,7 +58,7 @@ const Home = () => {
         console.log(dati);
         const blockNumber = dati.blockNumber;
         const { user, amount, reward } = dati.returnValues;
-        if (user === account)
+        if (user === account) {
           NotificationManager.success(
             "Complimenti!! per il tuo staking hai ricevuto " +
             (window.web3.utils.fromWei(amount, "ether")) +
@@ -62,22 +67,16 @@ const Home = () => {
             " ,vedi Transazione inserito nel BN: " +
             blockNumber
           );
+          reloadAllBalances();
+        }
       }
     );
-    const eventDebug = StrategyTwoInterface.debug().on('data', (dati) => {
-      console.error('EVENT DEBUG', dati.returnValues)
-    })
+
     return () => {
       eventStaked.unsubscribe(); // termina listener x nn farlo sovrapporre 
       eventUnStaked.unsubscribe();
-      eventDebug.unsubscribe();
     }
-  }, [account]);
 
-  useEffect(() => {
-    if (account) {
-      reloadAllBalances();
-    }
   }, [account]);
 
   const loadWeb3 = async () => {
@@ -115,6 +114,7 @@ const Home = () => {
   }
 
   function reloadAllBalances() {
+    setDefaultAddressContracts(account);
     loadBalanceCashToken();
     LoadBalanceCashTokenUser();
     loadBalanceCoupon();

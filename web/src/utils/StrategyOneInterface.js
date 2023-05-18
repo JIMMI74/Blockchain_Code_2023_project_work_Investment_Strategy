@@ -6,7 +6,7 @@ Contract.setProvider('ws://localhost:7545');
 const abi = StrategyOne.abi;
 const networkId = Object.entries(StrategyOne.networks)[0][0];
 const address = StrategyOne.networks[networkId].address;
-const StrategyOneContract = new Contract(abi, address);
+export const StrategyOneContract = new Contract(abi, address);
 loadEnum(StrategyOneContract, StrategyOne.ast);
 console.log(StrategyOneContract.enums)
 console.log(StrategyOneContract)

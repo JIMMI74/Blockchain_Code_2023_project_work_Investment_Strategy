@@ -1,12 +1,13 @@
 import StrategyTwo from 'truffeBuild/StrategyTwo.json';
 import { loadEnum } from 'spxd-web3-contract-enum'
+import getMyAddress from './getMyAddres';
 const Contract = require('web3-eth-contract');
 
 Contract.setProvider('ws://localhost:7545');
 const abi = StrategyTwo.abi;
 const networkId = Object.entries(StrategyTwo.networks)[0][0];
-export const address = StrategyTwo.networks[networkId].address;
-const StrategyTwoContract = new Contract(abi, address);
+const address = StrategyTwo.networks[networkId].address;
+export const StrategyTwoContract = new Contract(abi, address);
 loadEnum(StrategyTwoContract, StrategyTwo.ast);
 console.log(StrategyTwoContract.enums)
 console.log(StrategyTwoContract)
@@ -16,10 +17,7 @@ console.log(Object.keys(StrategyTwoContract.methods).filter((val) => !val.includ
 let StrategyTwoInterface = { ...StrategyTwoContract.enums }
 StrategyTwoInterface.address = address
 
-StrategyTwoInterface.debug = () => {
-  return StrategyTwoContract.events.debug();
 
-}
 StrategyTwoInterface.getBalanceAkTokenStTwo = async (address) => {
   const result = await StrategyTwoContract.methods.getBalanceAkTokenStTwo(address).call();
   console.log('Balance Akktoken Address StrategyTwo', result)

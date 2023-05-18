@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import StrategyOneInterface from "../utils/StrategyOneInterface";
 import CashTokenInterface from "../utils/CashTokenInterface";
 import CouponInterface from "../utils/CouponInterface";
+import setDefaultAddressContracts from "../utils/setDefaultAddressContracts";
 
 export default function Form() {
   const [duration, setDuration] = useState("");
@@ -25,15 +26,15 @@ export default function Form() {
       alert("Per andare avanti devi scegliere la durata!");
       return;
     }
-    const amountEth = window.web3.utils.toWei(amount.toString(), 'ether')
+    const amountEth = window.ethereum.utils.toWei(amount.toString(), 'ether')
     // Esegui qui la logica per piazzare lo stake con l'importo e la durata scelti
     console.log(`Stake di ${amountEth} CashToken per ${duration}`);
-    const accounts = await window.web3.eth.getAccounts()
+    const accounts = await window.ethereum.eth.getAccounts()
     if (accounts[0] === undefined) {
       alert("Per andare avanti devi connetterti a MetaMask!");
       return;
     }
-
+    setDefaultAddressContracts(accounts[0])
     console.log('approve stake', await CashTokenInterface.approve(StrategyOneInterface.address, amountEth, accounts[0]))
     console.log('stake', await StrategyOneInterface.stake(accounts[0], amountEth, duration))
   };
@@ -41,13 +42,14 @@ export default function Form() {
   const handleUnstake = async (event) => {
     event.preventDefault();
     // Esegui qui la logica per piazzare lo stake con l'importo e la durata scelti
-    const accounts = await window.web3.eth.getAccounts()
+    const accounts = await window.ethereum.eth.getAccounts()
     if (accounts[0] === undefined) {
       alert("Per andare avanti devi connetterti a MetaMask!");
       return;
     }
     const staked = await StrategyOneInterface.stakingData(accounts[0]);
     const amount = staked.amount
+    setDefaultAddressContracts(accounts[0])
     console.log('approve unstake', await CouponInterface.approve(StrategyOneInterface.address, amount, accounts[0]))
     console.log('unstake', await StrategyOneInterface.unstake(accounts[0]))
   };

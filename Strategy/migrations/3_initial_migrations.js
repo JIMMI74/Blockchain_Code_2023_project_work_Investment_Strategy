@@ -29,11 +29,11 @@ module.exports = async function (deployer, network, accounts) {
   // STRATEGY TWO
 
   // Transfer Ak Token => StrategyTwo contract
-  const transferAkAmount = web3.utils.toBN('1200000000000000000');
+  const transferAkAmount = web3.utils.toBN('140000000000000000000');
   await akToken.transfer(StrategyTwoContract.address, transferAkAmount);
   console.log(`from StrategyTwo Transferred ${transferAkAmount} Aktokens to  address :`, StrategyTwoContract.address);
 
-  const usdtCashAmount = web3.utils.toBN('1300000000000000000');
+  const usdtCashAmount = web3.utils.toBN('120000000000000000000');
   await usdtCash.transfer(StrategyTwoContract.address, usdtCashAmount);
   console.log(`from StrategyTwo Transferred ${usdtCashAmount} USDT tokens to address `, StrategyTwoContract.address);
 

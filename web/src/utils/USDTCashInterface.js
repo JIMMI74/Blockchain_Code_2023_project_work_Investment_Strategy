@@ -1,5 +1,5 @@
 import USDTCash from 'truffeBuild/USDTCash.json';
-import StrategyOneInterface from './StrategyOneInterface';
+import StrategyTwoInterface from './StrategyTwoInterface';
 const Contract = require('web3-eth-contract');
 Contract.setProvider('ws://localhost:7545');
 const abi = USDTCash.abi;
@@ -27,15 +27,14 @@ function approve(beneficiary, amount, customer) {
   return USDTCashContract.methods.approve(beneficiary, amount).send({ from: customer, gas: 3000000 })
 
 }
-/*
+
 
 function chaeckAllowanceTo(address) {
-  return CashTokenContract.methods.allowance(address, StrategyOneInterface.address).call()
+  return USDTCashContract.methods.allowance(address, StrategyTwoInterface.address).call()
 }
 async function checkAllowanceFrom(address) {
-  return CashTokenContract.methods.allowance(CashTokenContract.address, address).call()
+  return USDTCashContract.methods.allowance(USDTCashContract.address, address).call()
 }
-*/
 
-const USDTCashInterface = { BalanceUserUSDTCash, approve }
+const USDTCashInterface = { BalanceUserUSDTCash, approve, chaeckAllowanceTo, checkAllowanceFrom }
 export default USDTCashInterface

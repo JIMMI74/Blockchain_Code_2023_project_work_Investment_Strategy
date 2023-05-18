@@ -8,11 +8,11 @@ import "react-notifications/lib/notifications.css";
 import { Card, Row, Col } from 'react-bootstrap';
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import FormStake from "../components/FormStake";
-import FormAcc from "../components/FormAcc";
+import FormStake from "../form/FormStake";
+import FormAcc from '../form/FormAcc';
 import Web3 from "web3";
 import React from "react";
-import Form from "./Form";
+
 import "../App.css";
 import setDefaultAddressContracts from '../utils/setDefaultAddressContracts';
 

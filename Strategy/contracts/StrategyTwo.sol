@@ -24,6 +24,7 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
         uint256 firstDepositTime;
         uint256 lastDepositTime;
         AccumulationDuration duration; // Durata del piano di accumulo (in secondi)
+        
     }
 
     enum AccumulationDuration {

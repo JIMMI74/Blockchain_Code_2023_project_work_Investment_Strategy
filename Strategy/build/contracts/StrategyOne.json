@@ -23098,14 +23098,136 @@
   },
   "networks": {
     "5777": {
-      "events": {},
+      "events": {
+        "0xa850ae9193f515cbae8d35e8925bd2be26627fc91bce650b8652ed254e9cab03": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            }
+          ],
+          "name": "AddedToWhitelist",
+          "type": "event"
+        },
+        "0x5ae2cfa0cc562fa4a2fc0fdbdb74b1448fbad27275f97ecaa230f7360908d44f": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "CouponIssued",
+          "type": "event"
+        },
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        "0x1e3be2efa25bca5bff2215c7b30b31086e703d6aa7d9b9a1f8ba62c5291219ad": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "newRate",
+              "type": "uint256"
+            }
+          ],
+          "name": "RewardRateChanged",
+          "type": "event"
+        },
+        "0x7b0bb3ed87597eaa62e9b9614b426d0c76bbd30c77609daa65390794c0dec8ca": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "RewardReleased",
+          "type": "event"
+        },
+        "0x9e71bc8eea02a63969f509818f2dafb9254532904319f9dbda79b67bd34a5f3d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "Staked",
+          "type": "event"
+        },
+        "0xf26c0304cc83daf500e1dc22ab2e3cf954b3d506d62e34d70cc054255079e397": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "reward",
+              "type": "uint256"
+            }
+          ],
+          "name": "UnStaked",
+          "type": "event"
+        }
+      },
       "links": {},
-      "address": "0x19Cc8DdC49aDc11e2E5E2E388F6D673234Bacb78",
-      "transactionHash": "0xe7bcbab538933916614c829291d39373645381aee23db9ec689b0f6286aaf03a"
+      "address": "0x994C78F657C5b5a38810d55338490c9777eDa721",
+      "transactionHash": "0x12b6a581c485e9a78180fb134fbd06d1c80b26f57c0b6c734b60f1c47e0a03e5"
     }
   },
   "schemaVersion": "3.4.13",
-  "updatedAt": "2023-05-18T10:58:26.931Z",
+  "updatedAt": "2023-05-18T16:26:47.574Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

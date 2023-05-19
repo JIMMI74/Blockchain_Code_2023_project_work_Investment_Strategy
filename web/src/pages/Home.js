@@ -31,6 +31,7 @@ const Home = () => {
   const [BalanceUserAKToken, setBalanceUserAKToken] = useState(0)
 
 
+
   useEffect(() => {
     loadWeb3();
     loadBlockchainData();
@@ -71,6 +72,9 @@ const Home = () => {
         }
       }
     );
+
+
+
     const eventAkkTokenBought = StrategyTwoInterface.AkkTokenBought().on("data", (dati) => {
       console.log('Event Buy', { dati })
       const blockNumber = dati.blockNumber;
@@ -80,9 +84,11 @@ const Home = () => {
         if (cashTokenAmount !== undefined && akkTokenAmount !== undefined) {
           const akkTokenAmountInEth = window.web3.utils.fromWei(akkTokenAmount.toString(), "ether");
           const usdtCashAmountInEth = window.web3.utils.fromWei(cashTokenAmount.toString(), "ether");
+          const durationString = StrategyTwoInterface.getDurationByValue(duration)
+
 
           NotificationManager.success(
-            "L'operazione di acquisto di " + akkTokenAmountInEth + " AKKToken è andata a buon fine! Hai speso " + usdtCashAmountInEth + " CashToken, sottoscrivendo un piano di versamenti per la durata di " + duration + " giorni. La transazione è stata registrata sulla Blockchain al BN: " + blockNumber
+            "L'operazione di acquisto di " + akkTokenAmountInEth + " AKKToken è andata a buon fine! Hai speso " + usdtCashAmountInEth + " CashToken, sottoscrivendo un piano di versamenti per la durata di " + durationString + " giorni. La transazione è stata registrata sulla Blockchain al BN: " + blockNumber
           );
           reloadAllBalances();
         } else {

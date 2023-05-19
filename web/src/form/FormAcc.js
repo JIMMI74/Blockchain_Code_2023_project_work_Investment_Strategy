@@ -50,7 +50,7 @@ export default function FormAcc() {
     console.log(`Accumulation plane di ${amountEth} UsdtCash per ${duration}`);
     const accounts = await window.web3.eth.getAccounts()
     if (accounts[0] === undefined) {
-      alert("Per andare avanti devi connetterti a MetaMask!");
+      alert("You must connect to MetaMask to move forward!");
       return;
     }
     /*setDefaultAddressContracts(accounts[0]).catch((handleError));
@@ -64,16 +64,16 @@ export default function FormAcc() {
     function handleError(error) {
       if (error.message.includes("Can not buy 0 AkkToken")) {
         // Mostra un messaggio di errore all'utente
-        NotificationManager.error("Impossibile acquistare 0 AkkToken. Inserisci un importo valido.");
+        NotificationManager.error("Unable to purchase 0 AkkToken. Please enter a valid amount.");
       } else if (error.message.includes("Not enough Cash Token")) {
         // Mostra un messaggio di errore all'utente
-        NotificationManager.error("Non hai abbastanza Cash Token per completare l'acquisto.");
+        NotificationManager.error("You do not have enough Cash Token to complete the purchase.");
       } else if (error.message.includes("Amount too low")) {
         // Mostra un messaggio di errore all'utente
-        NotificationManager.error("L'importo inserito è troppo basso. Inserisci un importo maggiore.");
+        NotificationManager.error("The amount entered is too low. Enter a higher amount.");
       } else {
         // Gestisci altri errori o mostra un messaggio di errore generico
-        NotificationManager.error("Si è verificato un errore durante l'acquisto di AkkToken. Riprova.");
+        NotificationManager.error("An error occurred while purchasing AkkToken. Please try again.");
       }
     }
   };
@@ -82,7 +82,7 @@ export default function FormAcc() {
     event.preventDefault();
     const accounts = await window.web3.eth.getAccounts()
     if (accounts[0] === undefined) {
-      alert("Per andare avanti devi connetterti a MetaMask!");
+      alert("You must connect to MetaMask to move forward!");
       return;
     }
     // qui fai il controllo della quantita 
@@ -100,16 +100,16 @@ export default function FormAcc() {
       //NotificationManager.error("Si è verificato un errore : " + error.message.split(': ')[2]);
       if (error.message.includes("Amount must be greater than 0")) {
         // Mostra un messaggio di errore all'utente
-        NotificationManager.error("Inserisci un inmporto maggiore di zero.");
+        NotificationManager.error("Enter an inmport greater than zero.");
       } else if (error.message.includes("Insufficient balance")) {
         // Mostra un messaggio di errore all'utente
         NotificationManager.error("Bilancio Insufficiente.");
       } else if (error.message.includes("Non puoi prelevere tutti i token, ma devi lasciare 10 AkToken fino alla fine della durata del piano di accumulo")) {
         // Mostra un messaggio di errore all'utente
-        NotificationManager.error("Non puoi prelevere tutti i token, ma devi lasciare 10 AkToken fino alla fine della durata del piano di accumulo.");
+        NotificationManager.error("You cannot withdraw all the tokens, but you must leave 10 AkTokens until the end of the term of the accumulation plan.");
       } else {
         // Gestisci altri errori o mostra un messaggio di errore generico
-        NotificationManager.error("Si è verificato un errore, Riprova.");
+        NotificationManager.error("An error occurred, Please try again.");
       }
     }
   };

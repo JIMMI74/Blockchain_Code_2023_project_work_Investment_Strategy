@@ -48,6 +48,15 @@ StrategyTwoInterface.buyAkkToken = (address, amount, duration) => {
   return StrategyTwoContract.methods.buyAkkToken(amount, duration).send({ from: address, gas: 3000000 });
 }
 
+StrategyTwoInterface.rate = async () => {
+  const result = await StrategyTwoContract.methods.rate().call();
+  console.log(result)
+  return result;
+}
+StrategyTwoInterface.MIN_AK_TOKEN_AMOUNT = () => {
+  return StrategyTwoContract.methods.MIN_AK_TOKEN_AMOUNT().call();
+}
+
 
 /*
 

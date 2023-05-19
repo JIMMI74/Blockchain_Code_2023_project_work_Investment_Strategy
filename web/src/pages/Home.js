@@ -37,7 +37,7 @@ const Home = () => {
     if (account) reloadAllBalances();
 
     const eventStaked = StrategyOneInterface.Staked().on("data", (dati) => {
-      console.log('EVENT STAKED', { dati })
+      console.log('Event Staked', { dati })
       const blockNumber = dati.blockNumber;
       const { user, amount } = dati.returnValues;
       console.log("user", user);
@@ -71,10 +71,68 @@ const Home = () => {
         }
       }
     );
+    const eventAkkTokenBought = StrategyTwoInterface.AkkTokenBought().on("data", (dati) => {
+      console.log('Event Buy', { dati })
+      const blockNumber = dati.blockNumber;
+      const { user, cashTokenAmount, akkTokenAmount, duration } = dati.returnValues;
+      if (user === account) {
+        // Verifica che usdtCashAmount e akkTokenAmount siano definiti
+        if (cashTokenAmount !== undefined && akkTokenAmount !== undefined) {
+          const akkTokenAmountInEth = window.web3.utils.fromWei(akkTokenAmount.toString(), "ether");
+          const usdtCashAmountInEth = window.web3.utils.fromWei(cashTokenAmount.toString(), "ether");
+
+          NotificationManager.success(
+            "L'operazione di acquisto di " + akkTokenAmountInEth + " AKKToken è andata a buon fine! Hai speso " + usdtCashAmountInEth + " CashToken, sottoscrivendo un piano di versamenti per la durata di " + duration + " giorni. La transazione è stata registrata sulla Blockchain al BN: " + blockNumber
+          );
+          reloadAllBalances();
+        } else {
+          console.error("usdtCashAmount o akkTokenAmount non definiti: ", cashTokenAmount, akkTokenAmount);
+        }
+      }
+    });
+
+    const eventAkkTokenWithdrawn = StrategyTwoInterface.AkkTokenWithdrawn().on("data", (dati) => {
+      console.log('Event Withdraw', { dati })
+      const blockNumber = dati.blockNumber;
+      const { user, akkTokenAmount } = dati.returnValues;
+      if (user === account) {
+
+        if (akkTokenAmount !== undefined) {
+          const akkTokenAmountInEth = window.web3.utils.fromWei(akkTokenAmount.toString(), "ether");
+          NotificationManager.success(
+            "L'operazione di prelievo di " + akkTokenAmountInEth + "AkToken è andata a buon fine! La transazione è stata registrata sulla Blockchain al BN: " + blockNumber
+          );
+          reloadAllBalances();
+        } else {
+          console.error("usdtCashAmount o akkTokenAmount non definiti: ", akkTokenAmount);
+        }
+      }
+    });
+
+    const eventAkkTokenBalanceUpdated = StrategyTwoInterface.AkkTokenBalanceUpdated().on("data", (dati) => {
+      console.log('Event Remaining Token Balance', { dati })
+      const { user, amount } = dati.returnValues;
+      if (user === account) {
+
+        if (amount !== undefined) {
+          const BalanceInEth = window.web3.utils.fromWei(amount.toString(), "ether");
+          NotificationManager.success(
+            "Rimnagono depositati nel tuo contratto:" + BalanceInEth + " AkToken"
+          );
+          reloadAllBalances();
+        } else {
+          console.error(" non definiti: ", amount);
+        }
+      }
+    });
+
 
     return () => {
       eventStaked.unsubscribe(); // termina listener x nn farlo sovrapporre 
       eventUnStaked.unsubscribe();
+      eventAkkTokenBought.unsubscribe();
+      eventAkkTokenWithdrawn.unsubscribe();
+      eventAkkTokenBalanceUpdated.unsubscribe();
     }
 
   }, [account]);

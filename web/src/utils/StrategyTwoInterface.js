@@ -1,7 +1,9 @@
 import StrategyTwo from 'truffeBuild/StrategyTwo.json';
 import { loadEnum } from 'spxd-web3-contract-enum'
 import getMyAddress from './getMyAddres';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 const Contract = require('web3-eth-contract');
+
 
 Contract.setProvider('ws://localhost:7545');
 const abi = StrategyTwo.abi;
@@ -40,14 +42,64 @@ StrategyTwoInterface.users = async (address) => {
   console.log(result)
   return result;
 }
+
 StrategyTwoInterface.buyAkkToken = (address, amount, duration) => {
 
   return StrategyTwoContract.methods.buyAkkToken(amount, duration).send({ from: address, gas: 3000000 });
 }
 
+
+/*
+
+StrategyTwoInterface.buyAkkToken = async (address, amount, duration) => {
+  try {
+    return await StrategyTwoContract.methods.buyAkkToken(amount, duration).send({ from: address, gas: 3000000 });
+  } catch (error) {
+    console.error("Errore durante l'acquisto di AkkToken:", error);
+
+    if (error.message.includes("Can not buy 0 AkkToken")) {
+      // Mostra un messaggio di errore all'utente
+      NotificationManager.error("Impossibile acquistare 0 AkkToken. Inserisci un importo valido.");
+    } else if (error.message.includes("Not enough Cash Token")) {
+      // Mostra un messaggio di errore all'utente
+      NotificationManager.error("Non hai abbastanza Cash Token per completare l'acquisto.");
+    } else if (error.message.includes("Amount too low")) {
+      // Mostra un messaggio di errore all'utente
+      NotificationManager.error("L'importo inserito è troppo basso. Inserisci un importo maggiore.");
+    } else {
+      // Gestisci altri errori o mostra un messaggio di errore generico
+      NotificationManager.error("Si è verificato un errore durante l'acquisto di AkkToken. Riprova.");
+    }
+
+    // Rilancia l'errore in modo che possa essere gestito da eventuali chiamate esterne
+    throw error;
+  }
+}
+
+*/
+
+
+
+
+
 StrategyTwoInterface.withdrawAkkToken = (address, amount) => {
   return StrategyTwoContract.methods.withdrawAkkToken(amount).send({ from: address, gas: 3000000 });
 }
+
+StrategyTwoInterface.AkkTokenBought = () => {
+  return StrategyTwoContract.events.AkkTokenBought();
+
+}
+StrategyTwoInterface.AkkTokenWithdrawn = () => {
+  return StrategyTwoContract.events.AkkTokenWithdrawn();
+
+}
+StrategyTwoInterface.AkkTokenBalanceUpdated = () => {
+  return StrategyTwoContract.events.AkkTokenBalanceUpdated();
+
+}
+
+
 
 
 

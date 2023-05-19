@@ -16,7 +16,7 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
     USDTCash public usdtCash;
     uint256 public rate; // Tasso di conversione USDTCash/AkToken
 
-    uint256 public constant MIN_CASH_TOKEN_AMOUNT = 0.1e18; // Quantità minima di Cash Token richiesta per l'acquisto di AkToken
+    uint256 public constant MIN_CASH_TOKEN_AMOUNT = 10e18; // Quantità minima di Cash Token richiesta per l'acquisto di AkToken
 
     //tenere traccia del saldo dell'utente e dell'ultima volta che ha depositato
     struct User {
@@ -152,7 +152,7 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
         if (block.timestamp <= (users[msg.sender].firstDepositTime +  calculateDuration(users[msg.sender].duration))){
             // true ergo la duration non e finita
             //             100                      1           => 99 >    50
-            require( MIN_CASH_TOKEN_AMOUNT < (users[msg.sender].balance - akkTokenAmount)  ," Non puoi prelevere tutti i token, ma devi 1ETH fino alla fine della durata del piano di accumulo");
+            require( MIN_CASH_TOKEN_AMOUNT >= (users[msg.sender].balance - akkTokenAmount)  ," Non puoi prelevere tutti i token, ma devi 1ETH fino alla fine della durata del piano di accumulo");
         }
         users[msg.sender].balance -= akkTokenAmount;
 

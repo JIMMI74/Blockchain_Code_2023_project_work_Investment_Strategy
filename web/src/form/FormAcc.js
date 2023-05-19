@@ -3,14 +3,11 @@ import StrategyTwoInterface from "../utils/StrategyTwoInterface";
 import USDTCashInterface from "../utils/USDTCashInterface";
 import AkTokenInterface from "../utils/AkTokenInterface";
 import setDefaultAddressContracts from "../utils/setDefaultAddressContracts";
+import "react-notifications/lib/notifications.css";
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 
 export default function FormAcc() {
-
-
-
-
-
   const [duration, setDuration] = useState("");
   const formRefBuy = useRef(null);
   const formRefWhitdraw = useRef(null);
@@ -46,9 +43,31 @@ export default function FormAcc() {
       alert("Per andare avanti devi connetterti a MetaMask!");
       return;
     }
-    setDefaultAddressContracts(accounts[0])
+    /*setDefaultAddressContracts(accounts[0]).catch((handleError));
     console.log('approve Plane Contract', await USDTCashInterface.approve(StrategyTwoInterface.address, amountEth, accounts[0]))
-    console.log('Buy AkToken for Contract PLane', await StrategyTwoInterface.buyAkkToken(accounts[0], amountEth, duration))
+    console.log('Buy AkToken for Contract PLane', await StrategyTwoInterface.buyAkkToken(accounts[0], amountEth, duration));*/
+    setDefaultAddressContracts(accounts[0])
+
+    console.log('approve Plane Contract', await USDTCashInterface.approve(StrategyTwoInterface.address, amountEth, accounts[0]).catch(handleError))
+    console.log('Buy AkToken for Contract PLane', await StrategyTwoInterface.buyAkkToken(accounts[0], amountEth, duration).catch(handleError));
+
+    function handleError(error) {
+      if (error.message.includes("Can not buy 0 AkkToken")) {
+        // Mostra un messaggio di errore all'utente
+        NotificationManager.error("Impossibile acquistare 0 AkkToken. Inserisci un importo valido.");
+      } else if (error.message.includes("Not enough Cash Token")) {
+        // Mostra un messaggio di errore all'utente
+        NotificationManager.error("Non hai abbastanza Cash Token per completare l'acquisto.");
+      } else if (error.message.includes("Amount too low")) {
+        // Mostra un messaggio di errore all'utente
+        NotificationManager.error("L'importo inserito è troppo basso. Inserisci un importo maggiore.");
+      } else {
+        // Gestisci altri errori o mostra un messaggio di errore generico
+        NotificationManager.error("Si è verificato un errore durante l'acquisto di AkkToken. Riprova.");
+      }
+    }
+
+
   };
   // withdraw con un amount specificato da utente
   const handleWhitdraw = async (event) => {
@@ -150,7 +169,3 @@ export default function FormAcc() {
 };
 
 
-// 138       140
-//121   120
-// 99          100
-// 2           0

@@ -153,7 +153,7 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
             emit debug(msg.sender,users[msg.sender].balance - akkTokenAmount);
             // true ergo la duration non e finita
             //             10            <=                         10 - 1 == 9
-            require( MIN_AK_TOKEN_AMOUNT <= (users[msg.sender].balance - akkTokenAmount)  ," Non puoi prelevere tutti i token, ma devi lasciare 10 AkToken fino alla fine della durata del piano di accumulo");
+            require( MIN_AK_TOKEN_AMOUNT <= (users[msg.sender].balance - akkTokenAmount)  ,"You cannot withdraw all the tokens, but you must leave 10 AkTokens until the end of the term of the accumulation plan");
         }
         users[msg.sender].balance -= akkTokenAmount;
 
@@ -212,9 +212,6 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
         return usdtCash.balanceOf(ContractAddress); 
     }
 
-    //function getAkTokenBalanceUser() public view returns (uint256 _amount) {
-    //    return users[msg.sender].balance; 
-   // }
 }
 
 // second Strategy

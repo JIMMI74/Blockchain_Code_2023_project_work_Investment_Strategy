@@ -61,7 +61,7 @@ contract StrategyOne is ReentrancyGuard, Ownable {
     ) public nonReentrant {
         StakingData storage data = stakingData[msg.sender];
 
-        require(data.amount == 0, "Already staked, please unstake first.");
+        require(data.amount == 0, "Already staked, please unstake first");
         require(_amount > 0, "Amount cannot be 0");
         require(
             cashToken.balanceOf(msg.sender) >= _amount,

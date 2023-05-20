@@ -3,6 +3,8 @@ import StrategyOneInterface from "../utils/StrategyOneInterface";
 import CashTokenInterface from "../utils/CashTokenInterface";
 import CouponInterface from "../utils/CouponInterface";
 import setDefaultAddressContracts from "../utils/setDefaultAddressContracts";
+import "react-notifications/lib/notifications.css";
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 export default function FormStake() {
   const [duration, setDuration] = useState("");
@@ -37,7 +39,23 @@ export default function FormStake() {
     }
     setDefaultAddressContracts(accounts[0])
     console.log('approve stake', await CashTokenInterface.approve(StrategyOneInterface.address, amountEth, accounts[0]))
-    console.log('stake', await StrategyOneInterface.stake(accounts[0], amountEth, duration))
+    console.log('stake', await StrategyOneInterface.stake(accounts[0], amountEth, duration).catch(handleError));
+    function handleError(error) {
+      if (error.message.includes("Already staked, please unstake first")) {
+        // Mostra un messaggio di errore all'utente
+        NotificationManager.error("Already staked ! please unstake first.");
+      } else if (error.message.includes("Amount cannot be 0")) {
+        // Mostra un messaggio di errore all'utente
+        NotificationManager.error("The amount must not be 0 !");
+      } else if (error.message.includes("Not enough tokens")) {
+        // Mostra un messaggio di errore all'utente
+        NotificationManager.error("Not enough tokens!");
+      } else {
+        // Gestisci altri errori o mostra un messaggio di errore generico
+        NotificationManager.error("An error occurred, Please try again.");
+      }
+    }
+
   };
 
   const handleUnstake = async (event) => {
@@ -52,7 +70,30 @@ export default function FormStake() {
     const amount = staked.amount
     setDefaultAddressContracts(accounts[0])
     console.log('approve unstake', await CouponInterface.approve(StrategyOneInterface.address, amount, accounts[0]))
-    console.log('unstake', await StrategyOneInterface.unstake(accounts[0]))
+    console.log('unstake', await StrategyOneInterface.unstake(accounts[0]).catch(handleError));
+    function handleError(error) {
+      if (error.message.includes("No staked tokens")) {
+
+        NotificationManager.error("There are no staked CashTokens !");
+      } else if (error.message.includes("Minimum stake period not reached")) {
+
+        NotificationManager.error("Minimum stake period not reached !");
+      } else if (error.message.includes("Already unstaked")) {
+
+        NotificationManager.error("Already unstaked !");
+      } else if (error.message.includes("Insufficient coupon balance")) {
+
+        NotificationManager.error("Insufficient coupon balance !");
+      } else {
+
+        NotificationManager.error("An error occurred, Please try again.");
+      }
+    }
+
+
+
+
+
   };
   const buttonStyle = {
     backgroundColor: "#4CAF50",

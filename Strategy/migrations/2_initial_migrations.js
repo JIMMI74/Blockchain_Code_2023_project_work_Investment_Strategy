@@ -42,7 +42,7 @@ module.exports = async function (deployer, network, accounts) {
   //ACCOUNTS
 
   // Transfer some tokens to accounts for testing purposes
-  const TransferAmount_1 = web3.utils.toBN('5000000000000000000');
+  const TransferAmount_1 = web3.utils.toBN('50000000000000000000');
   await cashToken.transfer(accounts[1], TransferAmount_1);
   console.log(accounts[1], 'Account[1] CashTokne address is =', cashToken.address, "Totale =", TransferAmount_1)
   console.log(` from account ${accounts[1]}Transferred ${TransferAmount_1} CashToken, address is:`, cashToken.address);

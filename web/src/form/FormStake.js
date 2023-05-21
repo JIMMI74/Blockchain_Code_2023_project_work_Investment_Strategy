@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import StrategyOneInterface from "../utils/StrategyOneInterface";
 import CashTokenInterface from "../utils/CashTokenInterface";
 import CouponInterface from "../utils/CouponInterface";
@@ -6,10 +6,116 @@ import setDefaultAddressContracts from "../utils/setDefaultAddressContracts";
 import "react-notifications/lib/notifications.css";
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 
-export default function FormStake() {
+export default function FormStake({ stakedData }) {
+  //console.log('props STAKING', props)
   const [duration, setDuration] = useState("");
   const formRefStake = useRef(null);
   const fromRefUnstake = useRef(null);
+  const [finalData, setFinalData] = useState({});
+  const [remainingTimeFormatted, setRemainingTimeFormatted] = useState("");
+
+
+  useEffect(() => {
+    if (stakedData) {
+      calculateData(stakedData);
+    }
+  }, [stakedData]);
+
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (finalData.remainingTime !== undefined) {
+        console.log('finalData start', finalData);
+        const remaing = calculateData(stakedData);
+        if (!remaing.negative) {
+          clearInterval(timer);
+          remaing.secconds = 0;
+          remaing.minutes = 0;
+          remaing.hours = 0;
+          remaing.days = 0;
+          remaing.negative = false;
+          remaing.years = 0;
+          remaing.months = 0;
+        }
+        setRemainingTimeFormatted(remaing);
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [finalData]);
+
+  function calculateData(stakedData) {
+    const { amount, duration, endStake, interestRate, isCouponIssued, startStake } = stakedData;
+    const endDate = endStake !== '0' ? new Date(parseInt(endStake) * 1000) : 0;
+    const startDate = startStake !== '0' ? new Date(parseInt(startStake) * 1000) : 0;
+
+    const remainingTime = duration === "0" ? 0 : (new Date().getTime() / 1000) - ((parseInt(startStake) + parseInt(duration)));
+    const durationDateParse = duration === "0" ? 0 : timeToDate(duration);
+    const remainingTimeParse = timeToDate(remainingTime);
+    const amountEth = window.web3.utils.fromWei(amount.toString(), 'ether');
+
+
+    console.log({ durationDateParse, remainingTimeParse });
+    console.log({ endDate, startDate, remainingTime, amountEth, duration, durationDateParse, interestRate, isCouponIssued });
+
+    setFinalData({
+      endDate,
+      startDate,
+      remainingTime,
+      amountEth,
+      duration,
+      durationDateParse,
+      interestRate,
+      isCouponIssued
+    });
+
+    console.log('finalData end', remainingTime);
+
+    return remainingTimeParse;
+  }
+  function timeToDate(secconds) {
+
+    if (secconds === 0)
+      return { yars: 0, months: 0, days: 0, hours: 0, minutes: 0, secconds: 0, negative: false }
+
+    const negative = secconds < 0;
+    secconds = Math.abs(secconds);
+
+    const yars = Math.floor(secconds / 31536000);
+    secconds = secconds - (yars * 31536000);
+
+    const months = Math.floor(secconds / 2592000);
+    secconds = secconds - (months * 2592000);
+
+    const days = Math.floor(secconds / 86400);
+    secconds = secconds - (days * 86400);
+
+    const hours = Math.floor(secconds / 3600);
+    secconds = secconds - (hours * 3600);
+
+    const minutes = Math.floor(secconds / 60);
+    secconds = Math.floor(secconds - (minutes * 60));
+
+
+    return { yars, months, days, hours, minutes, secconds, negative }
+  }
+  /*function formatTime(time) {
+    if (time === null) {
+      return null;
+    }
+    const isNegative = time < 0;
+    const absoluteTime = Math.abs(time);
+
+    const days = Math.floor(absoluteTime / (24 * 60 * 60));
+    const hours = Math.floor((absoluteTime % (24 * 60 * 60)) / (60 * 60));
+    const minutes = Math.floor((absoluteTime % (60 * 60)) / 60);
+    const seconds = Math.floor(absoluteTime % 60);
+
+    return { days, hours, minutes, seconds, isNegative };
+  } */
+
 
   const handleDurationChange = (event) => {
     setDuration(event.target.value);
@@ -55,6 +161,8 @@ export default function FormStake() {
         NotificationManager.error("An error occurred, Please try again.");
       }
     }
+    setDuration("")
+    formRefStake.current.reset();
 
   };
 
@@ -90,7 +198,7 @@ export default function FormStake() {
       }
     }
 
-
+    fromRefUnstake.current.reset();
 
 
 
@@ -167,6 +275,25 @@ export default function FormStake() {
             </div>
           </form>
         </div>
+      </div>
+      <div>
+        <h2>Riepilogo dati:</h2>
+        <table>
+          <tbody>
+            <tr>
+              <td>EndDate:</td>
+              <td>
+                {remainingTimeFormatted.isNegative ? ':' : ''}
+                {remainingTimeFormatted.months} months, {remainingTimeFormatted.days} days, {remainingTimeFormatted.hours} hours, {remainingTimeFormatted.minutes} minutes, {remainingTimeFormatted.secconds} seconds
+              </td>
+            </tr>
+            <tr>
+              <td>StartDate:</td>
+              <td>{finalData.startDate ? finalData.startDate.toString() : ''}</td>
+            </tr>
+            {/* Aggiungi altre righe per gli altri valori che desideri visualizzare */}
+          </tbody>
+        </table>
       </div>
     </div>
   );

@@ -21,6 +21,7 @@ import setDefaultAddressContracts from '../utils/setDefaultAddressContracts';
 const Home = () => {
   const [loading, setLoading] = useState(true);
   const [account, setAccount] = useState("");
+  const [stakedData, setStakedData] = useState();
   const [balanceCashToken, setBalanceCashToken] = useState(0);
   const [balanceCashTokenUser, setBalanceCashTokenUser] = useState(0);
   const [balanceCoupon, setBalanceCoupon] = useState(0);
@@ -34,7 +35,7 @@ const Home = () => {
 
   useEffect(() => {
     loadWeb3();
-    loadBlockchainData();
+    //loadBlockchainData();
     if (account) reloadAllBalances();
 
     const eventStaked = StrategyOneInterface.Staked().on("data", (dati) => {
@@ -173,6 +174,7 @@ const Home = () => {
     setLoading(false);
     const staked = await StrategyOneInterface.stakingData(accounts[0]);
     console.log({ staked });
+    setStakedData(staked);
     const usersAcc = await StrategyTwoInterface.users(accounts[0]);
     console.log({ usersAcc });
   }
@@ -292,7 +294,7 @@ const Home = () => {
     <div className="main">
       <Navbar account={account} balanceCashTokenUser={balanceCashTokenUser.toLocaleString()} balanceCouponUser={balanceCouponUser.toLocaleString()} />
       <div className="container">
-        <FormStake />
+        <FormStake stakedData={stakedData} />
       </div>
       <div className="insert">
         <span>

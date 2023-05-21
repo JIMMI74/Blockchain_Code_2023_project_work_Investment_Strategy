@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import StrategyTwoInterface from "../utils/StrategyTwoInterface";
 import USDTCashInterface from "../utils/USDTCashInterface";
@@ -7,6 +8,48 @@ import "react-notifications/lib/notifications.css";
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 
+
+const buttonStyle = {
+  backgroundColor: "#4CAF50",
+  border: "none",
+  color: "white",
+  padding: "12px 24px",
+  textAlign: "center",
+  textDecoration: "none",
+  display: "inline-block",
+  fontSize: "16px",
+  margin: "4px 2px",
+  borderRadius: "5px",
+  cursor: "pointer",
+};
+
+const formStyle = {
+  display: "grid",
+  gridTemplateColumns: "repeat(2, 1fr)",
+  gridColumnGap: "20px",
+  alignItems: "center",
+  justifyContent: "center",
+  margin: "20px",
+  backgroundColor: "#f2f2f2",
+  padding: "20px",
+  borderRadius: "10px",
+};
+
+const inputStyle = {
+  width: "100%",
+  padding: "12px 20px",
+  margin: "8px 0",
+  boxSizing: "border-box",
+  borderRadius: "5px",
+  border: "2px solid #ccc",
+};
+
+const labelStyle = {
+  fontSize: "16px",
+  fontWeight: "bold",
+  marginBottom: "8px",
+};
+
 export default function FormAcc() {
   const [duration, setDuration] = useState("");
   const formRefBuy = useRef(null);
@@ -15,6 +58,7 @@ export default function FormAcc() {
   const [convesionRate, setConvesionRate] = useState(0);
   const [amountInCash, setAmountInCash] = useState(0);
   const [minAkTokenAmount, setMinAkTokenAmount] = useState(0);
+
 
   useEffect(() => {
     StrategyTwoInterface.rate().then(setConvesionRate)
@@ -53,9 +97,7 @@ export default function FormAcc() {
       alert("You must connect to MetaMask to move forward!");
       return;
     }
-    /*setDefaultAddressContracts(accounts[0]).catch((handleError));
-    console.log('approve Plane Contract', await USDTCashInterface.approve(StrategyTwoInterface.address, amountEth, accounts[0]))
-    console.log('Buy AkToken for Contract PLane', await StrategyTwoInterface.buyAkkToken(accounts[0], amountEth, duration));*/
+
     setDefaultAddressContracts(accounts[0])
 
     console.log('approve Plane Contract', await USDTCashInterface.approve(StrategyTwoInterface.address, amountEth, accounts[0]).catch(handleError))
@@ -70,12 +112,15 @@ export default function FormAcc() {
         NotificationManager.error("You do not have enough Cash Token to complete the purchase.");
       } else if (error.message.includes("Amount too low")) {
         // Mostra un messaggio di errore all'utente
-        NotificationManager.error("The amount entered is too low. Enter a higher amount.");
+        NotificationManager.error("Amount too low !  minimum deposit of 10 AkTokens is required to complete the transaction.");
       } else {
         // Gestisci altri errori o mostra un messaggio di errore generico
         NotificationManager.error("An error occurred while purchasing AkkToken. Please try again.");
       }
     }
+    setWithdrawAmount("");
+    setDuration("");
+    formRefBuy.current.reset();
   };
   // withdraw con un amount specificato da utente
   const handleWhitdraw = async (event) => {
@@ -104,7 +149,7 @@ export default function FormAcc() {
       } else if (error.message.includes("Insufficient balance")) {
         // Mostra un messaggio di errore all'utente
         NotificationManager.error("Bilancio Insufficiente.");
-      } else if (error.message.includes("Non puoi prelevere tutti i token, ma devi lasciare 10 AkToken fino alla fine della durata del piano di accumulo")) {
+      } else if (error.message.includes("You cannot withdraw all the tokens, but you must leave 10 AkTokens until the end of the term of the accumulation plan")) {
         // Mostra un messaggio di errore all'utente
         NotificationManager.error("You cannot withdraw all the tokens, but you must leave 10 AkTokens until the end of the term of the accumulation plan.");
       } else {
@@ -112,6 +157,8 @@ export default function FormAcc() {
         NotificationManager.error("An error occurred, Please try again.");
       }
     }
+    setWithdrawAmount("");
+    formRefWhitdraw.current.reset();
   };
 
   const handleConvertion = (e) => {
@@ -120,85 +167,82 @@ export default function FormAcc() {
   }
 
 
-
-  const buttonStyle = {
-    backgroundColor: "#4CAF50",
-    border: "none",
-    color: "white",
-    padding: "12px 24px",
-    textAlign: "center",
-    textDecoration: "none",
-    display: "inline-block",
-    fontSize: "16px",
-    margin: "4px 2px",
-    borderRadius: "5px",
-    cursor: "pointer",
-  };
-
-  const formStyle = {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: "20px",
-    backgroundColor: "#f2f2f2",
-    padding: "20px",
-    borderRadius: "10px",
-    height: "300px",
-  };
-
-  const inputStyle = {
-    width: "80%",
-    padding: "12px 20px",
-    margin: "8px 0",
-    boxSizing: "border-box",
-    borderRadius: "5px",
-    border: "2px solid #ccc",
-  };
-
-
-
   return (
-    <div style={{ width: 'auto', height: '10rem' }}>
-      <h2>Start accumulating  AkToken using the dollar coast averagin strategy !</h2>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-        <div style={{ backgroundColor: 'lightblue', padding: '20px', borderRadius: '10px', margin: '20px' }}>
-
+    <div style={{ width: "auto", height: "10rem" }}>
+      <h2>Start accumulating AkToken using the dollar cost averaging strategy!</h2>
+      <div style={formStyle}>
+        <div>
           <h3>Buy AkToken</h3>
-          <form ref={formRefBuy} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ marginBottom: '10px' }}>
-              <label htmlFor="amount">Enter the deposit amount:</label>
-              <input type="number" id="amount" name="amount" placeholder={`eth min ${minAkTokenAmount} eth`} required onChange={handleConvertion} style={{ width: '200px', height: '30px', borderRadius: '5px', border: '1px solid grey', padding: '5px' }} />
-              <h4>Amount in Cash: {amountInCash}</h4>
-            </div>
-            <div style={{ marginBottom: '10px' }}>
-              <label htmlFor="duration">Select the duration of the plane:</label>
-              <select id="duration" name="duration" value={duration} onChange={handleDurationChange} required style={{ width: '200px', height: '30px', borderRadius: '5px', border: '1px solid grey', padding: '5px' }}>
-                <option value="">Select Plane</option>
-                {Object.entries(StrategyTwoInterface.AccumulationDuration).map(([key, value]) => {
-                  return <option key={key} value={value}>{key}</option>
-                })}
-              </select>
-            </div>
-            <button onClick={handleBuy} style={{ backgroundColor: 'green', color: 'white', borderRadius: '5px', padding: '10px 20px', border: 'none', cursor: 'pointer' }}>Buy AkToken</button>
+          <form ref={formRefBuy}>
+            <label style={labelStyle} htmlFor="amount">
+              Enter the deposit amount:
+            </label>
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              placeholder={`ETH min ${minAkTokenAmount} ETH`}
+              required
+              onChange={handleConvertion}
+              style={inputStyle}
+            />
+            <h4>Amount in Cash: {amountInCash}</h4>
+            <label style={labelStyle} htmlFor="duration">
+              Select the duration of theplane:
+            </label>
+            <select
+              id="duration"
+              name="duration"
+              value={duration}
+              onChange={handleDurationChange}
+              required
+              style={inputStyle}
+            >
+              <option value="">Select Plane</option>
+              {Object.entries(StrategyTwoInterface.AccumulationDuration).map(
+                ([key, value]) => {
+                  return (
+                    <option key={key} value={value}>
+                      {key}
+                    </option>
+                  );
+                }
+              )}
+            </select>
+            <button onClick={handleBuy} style={buttonStyle}>
+              Buy AkToken
+            </button>
           </form>
         </div>
 
-        <div style={{ backgroundColor: 'lightcoral', padding: '20px', borderRadius: '10px', margin: '20px' }}>
-          <h3>Whitdraw</h3>
-          <form ref={formRefWhitdraw} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ marginBottom: '10px' }}>
-              <label htmlFor="withdrawAmount">Enter the amount you want to withdraw:</label>
-              <input type="number" id="withdrawAmount" name="withdrawAmount" placeholder="eth" value={withdrawAmount} onChange={handleWithdrawAmountChange} required style={inputStyle} />
-            </div>
-            <div style={{ display: 'inline', margin: '40px' }}>
-              <button onClick={handleWhitdraw} style={buttonStyle}>Whitdraw</button>
+        <div>
+          <h3>Withdraw</h3>
+          <form ref={formRefWhitdraw}>
+            <label style={labelStyle} htmlFor="withdrawAmount">
+              Enter the amount you want to withdraw:
+            </label>
+            <input
+              type="number"
+              id="withdrawAmount"
+              name="withdrawAmount"
+              placeholder="ETH"
+              value={withdrawAmount}
+              onChange={handleWithdrawAmountChange}
+              required
+              style={inputStyle}
+            />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <button onClick={handleWhitdraw} style={buttonStyle}>
+                Withdraw
+              </button>
             </div>
           </form>
         </div>
       </div>
+      <NotificationContainer />
+      <div>
+      </div>
     </div>
-
   );
 };
 

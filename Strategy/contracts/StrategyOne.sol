@@ -113,7 +113,7 @@ contract StrategyOne is ReentrancyGuard, Ownable {
         } else if (_duration == StakeDuration.DEV) {
             // 1 second
             interestRate = 100;
-            duration = 1 seconds;
+            duration = 30 seconds;
         } else {
             revert("Invalid stake duration");
         }
@@ -274,4 +274,7 @@ contract StrategyOne is ReentrancyGuard, Ownable {
         // restituisce il saldo dei coupon dell'utente
         return coupon.balanceOf(msg.sender);
     }
+   
+
+    
 }

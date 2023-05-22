@@ -179,7 +179,7 @@ const Home = () => {
     console.log({ usersAcc });
   }
 
-  function reloadAllBalances() {
+  async function reloadAllBalances() {
     setDefaultAddressContracts(account);
     loadBalanceCashToken();
     LoadBalanceCashTokenUser();
@@ -189,6 +189,8 @@ const Home = () => {
     LoadBalanceUSDTStTwo()
     LoadBalanceUserUSDTCash()
     LoadBalanceUserAkToken()
+
+    setStakedData(await StrategyOneInterface.stakingData(account));
 
   }
   async function handleAccountsChanged(accounts) {
@@ -292,109 +294,199 @@ const Home = () => {
 
   return (
     <div className="main">
-      <Navbar account={account} balanceCashTokenUser={balanceCashTokenUser.toLocaleString()} balanceCouponUser={balanceCouponUser.toLocaleString()} />
+      <Navbar account={account} balanceCashTokenUser={balanceCashTokenUser.toLocaleString()} balanceCouponUser={balanceCouponUser.toLocaleString()} BalanceAkToken={BalanceUserAKToken.toLocaleString()} BalanceUSDTcash={BalanceUserUSDT.toLocaleString()} />
       <div className="container">
         <FormStake stakedData={stakedData} />
       </div>
       <div className="insert">
         <span>
-          <h2>qui dobbiamo fare il piano di accumulo</h2>
+          <h2></h2>
         </span>
         <FormAcc />
         <div></div>
       </div>
-      <Row className="dashboard">
-        <Col className="dashboard-column">
-          <Card className="dashboard-card one">
-            <Card.Header className="card-label">STAKE CashToken/StrOne</Card.Header>
-            <Card.Body>
-              <Card.Text className="number">
-                {balanceCashToken.toLocaleString()} ETH
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col className="dashboard-column">
-          <Card className="dashboard-card one">
-            <Card.Header className="card-label">STAKE Coupon/StrOne</Card.Header>
-            <Card.Body>
-              <Card.Text className="number">
-                {balanceCoupon.toLocaleString()} ETH
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col className="dashboard-column">
-          <Card className="dashboard-card one">
-            <Card.Header className="card-label customer">STAKE CashToken/Customer</Card.Header>
-            <Card.Body>
-              <Card.Text className="number">
-                {balanceCashTokenUser.toLocaleString()} ETH
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col className="dashboard-column">
-          <Card className="dashboard-card one">
-            <Card.Header className="card-label customer">STAKE Coupon/Customer</Card.Header>
-            <Card.Body>
-              <Card.Text className="number">
-                {balanceCouponUser.toLocaleString()} ETH
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-      <Row className="dashboard">
-        <Col className="dashboard-column">
-          <Card className="dashboard-card_second">
-            <Card.Header className="card-label_second">ACC. AKToken/StrTwo</Card.Header>
-            <Card.Body>
-              <Card.Text className="number">
-                {balanceAkTokenStTwo.toLocaleString()} ETH
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-      <Row className="dashboard">
-        <Col className="dashboard-column">
-          <Card className="dashboard-card_second">
-            <Card.Header className="card-label_second">ACC. USDT/StrTwo</Card.Header>
-            <Card.Body>
-              <Card.Text className="number">
-                {balanceUSTDStTwo.toLocaleString()} ETH
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-      <Row className="dashboard">
-        <Col className="dashboard-column">
-          <Card className="dashboard-card_second">
-            <Card.Header className="card-label_second">ACC. USDT/Customer </Card.Header>
-            <Card.Body>
-              <Card.Text className="number">
-                {BalanceUserUSDT.toLocaleString()} ETH
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-      <Row className="dashboard">
-        <Col className="dashboard-column">
-          <Card className="dashboard-card_second">
-            <Card.Header className="card-label_second">ACC. AKToken/Customer </Card.Header>
-            <Card.Body>
-              <Card.Text className="number">
-                {BalanceUserAKToken.toLocaleString()} ETH
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+      {/* <div className="dashboard">
+        <h2>StrategyOne</h2>
+        <Row className="dashboard">
+          <Col className="dashboard-column">
+            <Card className="dashboard-card one">
+              <Card.Header className="card-label">STAKE CashToken/StrOne</Card.Header>
+              <Card.Body>
+                <Card.Text className="number">
+                  {balanceCashToken.toLocaleString()} ETH
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col className="dashboard-column">
+            <Card className="dashboard-card one">
+              <Card.Header className="card-label">STAKE Coupon/StrOne</Card.Header>
+              <Card.Body>
+                <Card.Text className="number">
+                  {balanceCoupon.toLocaleString()} ETH
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col className="dashboard-column">
+            <Card className="dashboard-card one">
+              <Card.Header className="card-label customer">STAKE CashToken/Customer</Card.Header>
+              <Card.Body>
+                <Card.Text className="number">
+                  {balanceCashTokenUser.toLocaleString()} ETH
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col className="dashboard-column">
+            <Card className="dashboard-card one">
+              <Card.Header className="card-label customer">STAKE Coupon/Customer</Card.Header>
+              <Card.Body>
+                <Card.Text className="number">
+                  {balanceCouponUser.toLocaleString()} ETH
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </div>
+      <div className="dashboard" >
+        <h2>StrategyTwo</h2>
+        <Row className="dashboard">
+          <Col className="dashboard-column">
+            <Card className="dashboard-card_second">
+              <Card.Header className="card-label_second">ACC. AKToken/StrTwo</Card.Header>
+              <Card.Body>
+                <Card.Text className="number">
+                  {balanceAkTokenStTwo.toLocaleString()} ETH
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        <Row className="dashboard">
+          <Col className="dashboard-column">
+            <Card className="dashboard-card_second">
+              <Card.Header className="card-label_second">ACC. USDT/StrTwo</Card.Header>
+              <Card.Body>
+                <Card.Text className="number">
+                  {balanceUSTDStTwo.toLocaleString()} ETH
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        <Row className="dashboard">
+          <Col className="dashboard-column">
+            <Card className="dashboard-card_second">
+              <Card.Header className="card-label_second">ACC. USDT/Customer </Card.Header>
+              <Card.Body>
+                <Card.Text className="number">
+                  {BalanceUserUSDT.toLocaleString()} ETH
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        <Row className="dashboard">
+          <Col className="dashboard-column">
+            <Card className="dashboard-card_second">
+              <Card.Header className="card-label_second">ACC. AKToken/Customer </Card.Header>
+              <Card.Body>
+                <Card.Text className="number">
+                  {BalanceUserAKToken.toLocaleString()} ETH
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row> */}
+      <div className="dashboard">
+        <div className="strategy-container">
+          <h2 className="strategy-title">StrategyOne</h2>
+          <div className="card-container">
+            <Card className="dashboard-card one">
+              <Card.Header className="card-label">STAKE CashToken/StrOne</Card.Header>
+              <Card.Body>
+                <Card.Text className="number">
+                  {balanceCashToken.toLocaleString()} ETH
+                </Card.Text>
+              </Card.Body>
+            </Card>
+            <Card className="dashboard-card one">
+              <Card.Header className="card-label">STAKE Coupon/StrOne</Card.Header>
+              <Card.Body>
+                <Card.Text className="number">
+                  {balanceCoupon.toLocaleString()} ETH
+                </Card.Text>
+              </Card.Body>
+            </Card>
+            <Card className="dashboard-card one">
+              <Card.Header className="card-label customer">STAKE CashToken</Card.Header>
+              <Card.Body>
+                <Card.Text className="number colorcustomer">
+                  <strong>{balanceCashTokenUser.toLocaleString()} ETH</strong>
+                </Card.Text>
+              </Card.Body>
+              Customer
+            </Card>
+            <Card className="dashboard-card one">
+              <Card.Header className="card-label customer">STAKE Coupon</Card.Header>
+              <Card.Body>
+                <Card.Text className="number colorcustomer">
+                  <strong>{balanceCouponUser.toLocaleString()} ETH</strong>
+                </Card.Text>
+              </Card.Body>
+              Customer
+            </Card>
+          </div>
+        </div>
+
+        <div className="strategy-container">
+          <h2 className="strategy-title">StrategyTwo</h2>
+          <div className="card-container">
+            <Card className="dashboard-card_second">
+              <Card.Header className="card-label_second">ACC. AKToken/StrTwo</Card.Header>
+              <Card.Body>
+                <Card.Text className="number">
+                  {balanceAkTokenStTwo.toLocaleString()} ETH
+                </Card.Text>
+              </Card.Body>
+            </Card>
+            <Card className="dashboard-card_second">
+              <Card.Header className="card-label_second">ACC. USDT/StrTwo</Card.Header>
+              <Card.Body>
+                <Card.Text className="number">
+                  {balanceUSTDStTwo.toLocaleString()} ETH
+                </Card.Text>
+              </Card.Body>
+            </Card>
+            <Card className="dashboard-card_second">
+              <Card.Header className="card-label_second">ACC. USDT</Card.Header>
+              <Card.Body>
+                <Card.Text className="number colorcustomer">
+                  <strong>{BalanceUserUSDT.toLocaleString()} ETH</strong>
+                </Card.Text>
+              </Card.Body>
+              Customer
+            </Card>
+            <Card className="dashboard-card_second">
+              <Card.Header className="card-label_second">ACC. AKToken</Card.Header>
+              <Card.Body>
+                <Card.Text className="number colorcustomer">
+                  <strong>{BalanceUserAKToken.toLocaleString()} ETH</strong>
+                </Card.Text>
+              </Card.Body>
+              Customer
+            </Card>
+          </div>
+        </div>
+      </div>
+
+
       <NotificationContainer />
     </div>
+
+
   );
 };
 

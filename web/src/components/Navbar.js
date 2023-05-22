@@ -47,9 +47,11 @@ const Navbar = (props) => {
 
         </ul>
         <small>
-          <p className="App-p">ACCOUNT NUMBER : {props.account} </p>
-          <p>Balance CashToken : {props.balanceCashTokenUser}</p>
-          <p>Total Cupon Received from Stake: {props.balanceCouponUser}</p>
+          <p className="App-p">ACCOUNT NUMBER : <strong>{props.account}</strong></p>
+          <p>Balance CashToken (stake) : <strong>{props.balanceCashTokenUser}</strong></p>
+          <p>Total Cupon Received from Stake: <strong>{props.balanceCouponUser}</strong></p>
+          <p>Balance USDTCash (accumulation): <strong>{props.BalanceUSDTcash}</strong></p>
+          <p>Total AkToken Received from Acccumulation Plane: <strong>{props.BalanceAkToken}</strong></p>
         </small>
 
         <ul className="social-icons">

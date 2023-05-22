@@ -7,8 +7,9 @@
   width:auto;   
 }
 .main{
-  background-color: rgb(22, 180, 159);
-  height: auto;  
+  width: 100%;
+  height: 50vh; 
+ 
 }
 .nav-links {
   list-style-type: none;
@@ -83,7 +84,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem;
+    padding: 2rem;
   }
 
   .nav-toggle {
@@ -122,28 +123,33 @@
   }
  
   .container{
+    box-sizing: border-box;
+    padding : 40px;
     display: flex;
     flex-direction: wrap;
     justify-content: space-around;
     align-items: center;
     flex-direction: column;
     border: 5px solid black;
-    background-color: aquamarine;
+    background-color: rgb(108, 116, 114);
    
-    width: 100%;
+   
+    width: auto;
     height: 50vh;  
   }
 
 .insert{
-   display: flex;
+    
+    display: flex;
     flex-direction: wrap;
     justify-content: space-around;
     align-items: center;
     flex-direction: column;
     border:5px solid yellowgreen;
     background-color:cornflowerblue;
-    width: 100%;
+    width: auto;
     height: 50vh;  
+  
   }
 
   /*    */
@@ -201,7 +207,7 @@
   }
   
 
-  
+  */STAKE
  .input {
   width:15vw;
  height:8vh;
@@ -243,58 +249,35 @@
   margin-left: 20px;
 }
 }
-/*       */
+
+
 .dashboard {
-  margin: 20px 0;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  padding-left: 2rem;
-  padding-right: 2rem;;
+  justify-content: center;
+  
+  padding: 2rem;
+   background-color: slategrey;
 }
 
-.dashboard-column {
-  padding: 0 10px;
+.strategy-container {
+  margin-bottom: 2rem;
 }
 
-.dashboard-card {
-  width: 280px;
-  height: 150px;
+.strategy-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.card-container {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  background-color:darkkhaki;
-  border: 1px solid black;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  position: relative;
-  flex: 0 0 calc(25% - 10px);
 }
 
-.card-label {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 5px 10px;
-  background-color: #3b4d60;
-  color: white;
-  font-weight: bold;
-  border-radius: 8px 0;
-  border: 2px solid goldenrod;
-
-}
-
-.card-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  font-size: 24px;
-  font-weight: bold;
-}
-
+.dashboard-card,
 .dashboard-card_second {
   width: 280px;
   height: 150px;
@@ -302,37 +285,67 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color:darkkhaki;
-  border: 1px solid black;
+  background-color:moccasin;
   border-radius: 8px;
   margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
   position: relative;
-  flex: 0 0 calc(25% - 10px);
+  cursor: pointer;
 }
 
+.dashboard-card:before,
+.dashboard-card_second:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  opacity: 0;
+  background-color: grey;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.dashboard-card:hover:before,
+.dashboard-card_second:hover:before {
+  opacity: 0.3;
+}
+
+.dashboard-card:hover,
+.dashboard-card_second:hover {
+  transform: translateY(-5px);
+}
+
+.card-label,
 .card-label_second {
   position: absolute;
   top: 0;
   left: 0;
   padding: 5px 10px;
-  background-color: greenyellow;
-  color: black;
+  color: white;
   font-weight: bold;
   border-radius: 8px 0;
-  border: 2px solid black;
-  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  height: 30px;
-  
-}
-.number {
-font-family: 'Times New Roman', Times, serif;
-font-size: 1.3rem;
 }
 
-.customer
-{
-background-color: rgb(23, 128, 234);
+.card-label {
+  background-color: #031930;
+  border: 2px solid goldenrod;
 }
-.one{
-  background-color: rgb(99, 217, 88);
+
+.card-label_second {
+  background-color: rgb(52, 82, 7);
+  border: 2px solid black;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  height: 30px;
+}
+
+.number {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 1.3rem;
+}
+.colorcustomer {
+  color: sienna;
+
 }

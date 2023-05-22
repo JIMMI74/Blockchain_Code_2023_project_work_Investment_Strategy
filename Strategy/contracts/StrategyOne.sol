@@ -113,7 +113,7 @@ contract StrategyOne is ReentrancyGuard, Ownable {
         } else if (_duration == StakeDuration.DEV) {
             // 1 second
             interestRate = 100;
-            duration = 30 seconds;
+            duration = 15 seconds;
         } else {
             revert("Invalid stake duration");
         }

@@ -1,10 +1,111 @@
 import React, { useState, useRef, useEffect } from "react";
 import StrategyOneInterface from "../utils/StrategyOneInterface";
-import CashTokenInterface from "../utils/CashTokenInterface";
+import CashTokenInterface, { networkId } from "../utils/CashTokenInterface";
 import CouponInterface from "../utils/CouponInterface";
 import setDefaultAddressContracts from "../utils/setDefaultAddressContracts";
 import "react-notifications/lib/notifications.css";
 import { NotificationContainer, NotificationManager } from 'react-notifications';
+const styles = {
+
+  container: {
+    width: "auto",
+    height: "100%",
+    fontFamily: "Arial, sans-serif",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "#265980",
+    padding: "20px",
+  },
+  title: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: "2rem",
+    marginBottom: "30px",
+    color: "#333",
+  },
+  formContainer: {
+    display: "flex",
+    justifyContent: "center",
+    gap: "20px",
+  },
+  card: {
+    backgroundColor: "#fff",
+    padding: "20px",
+    borderRadius: "10px",
+    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+    minWidth: "300px",
+    width: "fit-content",
+  },
+  stakeCard: {
+    backgroundColor: "#eaf7f7",
+  },
+  unstakeCard: {
+    backgroundColor: "#fbeff0",
+  },
+  cardTitle: {
+    textAlign: "center",
+    fontSize: "1.5rem",
+    fontWeight: "bold",
+    marginBottom: "20px",
+    color: "#555",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "10px",
+  },
+  formControl: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "5px",
+  },
+  input: {
+    width: "100%",
+    padding: "10px",
+    fontSize: "1rem",
+    borderRadius: "5px",
+    border: "2px solid #ccc",
+  },
+  select: {
+    width: "100%",
+    padding: "10px",
+    fontSize: "1rem",
+    borderRadius: "5px",
+    border: "2px solid #ccc",
+  },
+  button: {
+    backgroundColor: "#4CAF50",
+    color: "#fff",
+    fontSize: "1rem",
+    padding: "12px 24px",
+    borderRadius: "5px",
+    border: "none",
+    cursor: "pointer",
+    transition: "0.3s",
+  },
+  stakeButton: {
+    backgroundColor: "#2e8b57",
+  },
+  unstakeButton: {
+    backgroundColor: "#ff6e6e",
+  },
+  buttonHover: {
+    backgroundColor: "#45a049",
+  },
+  summary: {
+    marginTop: "40px",
+    color: "#555",
+  },
+  summaryTitle: {
+    textAlign: "center",
+    fontSize: "1.5rem",
+    fontWeight: "bold",
+    color: "#333",
+  },
+};
 
 export default function FormStake({ stakedData }) {
   //console.log('props STAKING', props)
@@ -16,19 +117,23 @@ export default function FormStake({ stakedData }) {
 
 
   useEffect(() => {
-    if (stakedData) {
+    console.warn('stakedData', stakedData);
+    if (stakedData !== undefined) { // il calculate lo faccio subito la prima volta cosi ho i dati pronti
       calculateData(stakedData);
+
     }
-  }, [stakedData]);
-
-
-  useEffect(() => {
-    const timer = setInterval(() => {
+    if (stakedData !== undefined && stakedData.duration === '0') return;
+    const timer = setInterval(() => { // ogni secondo aggiorno il timer del remaing time
       if (finalData.remainingTime !== undefined) {
-        console.log('finalData start', finalData);
+        console.log("finalData start", finalData);
+        console.warn('timer in setInterval :', timer);
         const remaing = calculateData(stakedData);
+
+        setRemainingTimeFormatted(remaing);
+        //remaing.hasEnded = true;
         if (!remaing.negative) {
           clearInterval(timer);
+          NotificationManager.info("Your stake has ended, Now you can unstake your tokens !");
           remaing.secconds = 0;
           remaing.minutes = 0;
           remaing.hours = 0;
@@ -36,15 +141,21 @@ export default function FormStake({ stakedData }) {
           remaing.negative = false;
           remaing.years = 0;
           remaing.months = 0;
+          remaing.hasEnded = false;
+          remaing.hasStarted = false;
         }
-        setRemainingTimeFormatted(remaing);
       }
     }, 1000);
+    console.warn('timer', timer);
 
     return () => {
       clearInterval(timer);
+
+
     };
-  }, [finalData]);
+  }, [stakedData]);
+
+
 
   function calculateData(stakedData) {
     const { amount, duration, endStake, interestRate, isCouponIssued, startStake } = stakedData;
@@ -56,10 +167,6 @@ export default function FormStake({ stakedData }) {
     const remainingTimeParse = timeToDate(remainingTime);
     const amountEth = window.web3.utils.fromWei(amount.toString(), 'ether');
 
-
-    console.log({ durationDateParse, remainingTimeParse });
-    console.log({ endDate, startDate, remainingTime, amountEth, duration, durationDateParse, interestRate, isCouponIssued });
-
     setFinalData({
       endDate,
       startDate,
@@ -70,8 +177,6 @@ export default function FormStake({ stakedData }) {
       interestRate,
       isCouponIssued
     });
-
-    console.log('finalData end', remainingTime);
 
     return remainingTimeParse;
   }
@@ -101,20 +206,8 @@ export default function FormStake({ stakedData }) {
 
     return { yars, months, days, hours, minutes, secconds, negative }
   }
-  /*function formatTime(time) {
-    if (time === null) {
-      return null;
-    }
-    const isNegative = time < 0;
-    const absoluteTime = Math.abs(time);
 
-    const days = Math.floor(absoluteTime / (24 * 60 * 60));
-    const hours = Math.floor((absoluteTime % (24 * 60 * 60)) / (60 * 60));
-    const minutes = Math.floor((absoluteTime % (60 * 60)) / 60);
-    const seconds = Math.floor(absoluteTime % 60);
 
-    return { days, hours, minutes, seconds, isNegative };
-  } */
 
 
   const handleDurationChange = (event) => {
@@ -123,15 +216,16 @@ export default function FormStake({ stakedData }) {
 
   const handleStake = async (event) => {
     event.preventDefault();
+
     const formData = new FormData(formRefStake.current);
     const amount = formData.get("amount");
     console.log({ formData, amount, formRefStake })
     if (!amount) {
-      alert("Per andare avanti devi inserire un importo!");
+      alert("You must enter an amount to move forward!");
       return;
     }
     if (!duration) {
-      alert("Per andare avanti devi scegliere la durata!");
+      alert("In order to move forward you have to choose the duration!");
       return;
     }
 
@@ -140,7 +234,7 @@ export default function FormStake({ stakedData }) {
     console.log(`Stake di ${amountEth} CashToken per ${duration}`);
     const accounts = await window.web3.eth.getAccounts()
     if (accounts[0] === undefined) {
-      alert("Per andare avanti devi connetterti a MetaMask!");
+      alert("You must connect to MetaMask to move forward!");
       return;
     }
     setDefaultAddressContracts(accounts[0])
@@ -167,6 +261,7 @@ export default function FormStake({ stakedData }) {
   };
 
   const handleUnstake = async (event) => {
+
     event.preventDefault();
     // Esegui qui la logica per piazzare lo stake con l'importo e la durata scelti
     const accounts = await window.web3.eth.getAccounts()
@@ -199,237 +294,272 @@ export default function FormStake({ stakedData }) {
     }
 
     fromRefUnstake.current.reset();
-
-
-
   };
-  const buttonStyle = {
-    backgroundColor: "#4CAF50",
-    border: "none",
-    color: "white",
-    padding: "12px 24px",
-    textAlign: "center",
-    textDecoration: "none",
-    display: "inline-block",
-    fontSize: "16px",
-    margin: "4px 2px",
-    borderRadius: "5px",
-    cursor: "pointer",
-  };
-
-  const formStyle = {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: "20px",
-    backgroundColor: "#f2f2f2",
-    padding: "20px",
-    borderRadius: "10px",
-    height: "300px",
-  };
-
-  const inputStyle = {
-    width: "80%",
-    padding: "12px 20px",
-    margin: "8px 0",
-    boxSizing: "border-box",
-    borderRadius: "5px",
-    border: "2px solid #ccc",
-  };
-
-
-
   return (
-    <div style={{ width: 'auto', height: '10rem' }}>
-      <h2>Stake tokens to earn interest</h2>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-        <div style={{ backgroundColor: 'lightblue', padding: '20px', borderRadius: '10px', margin: '20px' }}>
-          <h3>Stake</h3>
-          <form ref={formRefStake} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ marginBottom: '10px' }}>
-              <label htmlFor="amount">Inserisci l'importo dello stake:</label>
-              <input type="number" id="amount" name="amount" placeholder="eth" required style={{ width: '200px', height: '30px', borderRadius: '5px', border: '1px solid grey', padding: '5px' }} />
+
+    <div style={styles.container}>
+      <h2 style={styles.title}>Stake tokens to earn interest</h2>
+      <div style={styles.formContainer}>
+        <div style={{ ...styles.card, ...styles.stakeCard }}>
+          <h3 style={styles.cardTitle}>Stake</h3>
+          <form ref={formRefStake} style={styles.form}>
+            <div style={styles.formControl}>
+              <label htmlFor="amount">Please enter the stake amount</label>
+              <input
+                type="number"
+                id="amount"
+                name="amount"
+                placeholder="ETH"
+                required
+                style={styles.input}
+              />
             </div>
-            <div style={{ marginBottom: '10px' }}>
-              <label htmlFor="duration">Seleziona la durata dello stake:</label>
-              <select id="duration" name="duration" value={duration} onChange={handleDurationChange} required style={{ width: '200px', height: '30px', borderRadius: '5px', border: '1px solid grey', padding: '5px' }}>
-                <option value="">Scegli una durata</option>
-                {Object.entries(StrategyOneInterface.StakeDuration).map(([key, value]) => {
-                  return <option key={key} value={value}>{key}</option>
-                })}
+            <div style={styles.formControl}>
+              <label htmlFor="duration">Select the stake duration</label>
+              <select
+                id="duration"
+                name="duration"
+                value={duration}
+                onChange={handleDurationChange}
+                required
+                style={styles.select}
+              >
+                <option value="">Please choose a duration</option>
+                {Object.entries(StrategyOneInterface.StakeDuration).map(
+                  ([key, value]) => {
+                    return (
+                      <option key={key} value={value}>
+                        {key}
+                      </option>
+                    );
+                  }
+                )}
               </select>
             </div>
-            <button onClick={handleStake} style={{ backgroundColor: 'green', color: 'white', borderRadius: '5px', padding: '10px 20px', border: 'none', cursor: 'pointer' }}>Stake</button>
+            <button
+              onClick={handleStake}
+              style={{ ...styles.button, ...styles.stakeButton }}
+            >
+              <h3>Stake</h3>
+            </button>
           </form>
         </div>
 
-        <div style={{ backgroundColor: 'lightcoral', padding: '20px', borderRadius: '10px', margin: '20px' }}>
-          <h3>Unstake</h3>
-          <form ref={fromRefUnstake} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ marginBottom: '10px' }}>
-              <label htmlFor="amount">Inserisci l'importo dello unstake:</label>
-              <div style={{ display: 'inline', margin: '40px' }}>
-                <button onClick={handleUnstake} style={{ backgroundColor: 'red', color: 'white', borderRadius: '5px', padding: '10px 20px', border: 'none', cursor: 'pointer' }}>Unstake</button>
+        <div style={{ ...styles.card, ...styles.unstakeCard }}>
+          <h3 style={styles.cardTitle}>Unstake</h3>
+          <form ref={fromRefUnstake} style={styles.form}>
+            <div style={styles.formControl}>
+              <label htmlFor="amount">Enter the amount of the unstake</label>
+              <div style={{ display: "inline", margin: "40px" }}>
+                <button
+                  onClick={handleUnstake}
+                  style={{ ...styles.button, ...styles.unstakeButton }}
+                >
+                  Widthdraw
+                </button>
               </div>
             </div>
           </form>
-        </div>
-      </div>
-      <div>
-        <h2>Riepilogo dati:</h2>
-        <table>
-          <tbody>
-            <tr>
-              <td>EndDate:</td>
-              <td>
-                {remainingTimeFormatted.isNegative ? ':' : ''}
-                {remainingTimeFormatted.months} months, {remainingTimeFormatted.days} days, {remainingTimeFormatted.hours} hours, {remainingTimeFormatted.minutes} minutes, {remainingTimeFormatted.secconds} seconds
-              </td>
-            </tr>
-            <tr>
-              <td>StartDate:</td>
-              <td>{finalData.startDate ? finalData.startDate.toString() : ''}</td>
-            </tr>
-            {/* Aggiungi altre righe per gli altri valori che desideri visualizzare */}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-};
-
-
-
-
-/*import React, { useState, useRef } from "react";
-import StrategyOneInterface from "../utils/StrategyOneInterface";
-import CashTokenInterface from "../utils/CashTokenInterface";
-import CouponInterface from "../utils/CouponInterface";
-
-export default function FormStake() {
-  const [duration, setDuration] = useState("");
-  const formRefStake = useRef(null);
-  const fromRefUnstake = useRef(null);
-
-  const handleDurationChange = (event) => {
-    setDuration(event.target.value);
-  };
-
-  const handleStake = async (event) => {
-    event.preventDefault();
-    const formData = new FormData(formRefStake.current);
-    const amount = formData.get("amount");
-    console.log({ formData, amount, formRefStake })
-    if (!amount) {
-      alert("Per andare avanti devi inserire un importo!");
-      return;
-    }
-    if (!duration) {
-      alert("Per andare avanti devi scegliere la durata!");
-      return;
-    }
-    const amountEth = window.web3.utils.toWei(amount.toString(), 'ether')
-    // Esegui qui la logica per piazzare lo stake con l'importo e la durata scelti
-    console.log(`Stake di ${amountEth} CashToken per ${duration}`);
-    const accounts = await window.web3.eth.getAccounts()
-    if (accounts[0] === undefined) {
-      alert("Per andare avanti devi connetterti a MetaMask!");
-      return;
-    }
-
-    console.log('approve stake', await CashTokenInterface.approve(StrategyOneInterface.address, amountEth, accounts[0]))
-    console.log('stake', await StrategyOneInterface.stake(accounts[0], amountEth, duration))
-  };
-
-  const handleUnstake = async (event) => {
-    event.preventDefault();
-    // Esegui qui la logica per piazzare lo stake con l'importo e la durata scelti
-    const accounts = await window.web3.eth.getAccounts()
-    if (accounts[0] === undefined) {
-      alert("Per andare avanti devi connetterti a MetaMask!");
-      return;
-    }
-    const staked = await StrategyOneInterface.stakingData(accounts[0]);
-    const amount = staked.amount
-    console.log('approve unstake', await CouponInterface.approve(StrategyOneInterface.address, amount, accounts[0]))
-    console.log('unstake', await StrategyOneInterface.unstake(accounts[0]))
-  };
-  const buttonStyle = {
-    backgroundColor: "#4CAF50",
-    border: "none",
-    color: "white",
-    padding: "12px 24px",
-    textAlign: "center",
-    textDecoration: "none",
-    display: "inline-block",
-    fontSize: "16px",
-    margin: "4px 2px",
-    borderRadius: "5px",
-    cursor: "pointer",
-  };
-
-  const formStyle = {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: "20px",
-    backgroundColor: "#f2f2f2",
-    padding: "20px",
-    borderRadius: "10px",
-    height: "300px",
-  };
-
-  const inputStyle = {
-    width: "80%",
-    padding: "12px 20px",
-    margin: "8px 0",
-    boxSizing: "border-box",
-    borderRadius: "5px",
-    border: "2px solid #ccc",
-  };
-
-
-
-  return (
-    <div style={{ width: 'auto', height: '10rem' }}>
-      <h2>Stake tokens to earn interest</h2>
-      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-        <div style={{ backgroundColor: 'lightblue', padding: '20px', borderRadius: '10px', margin: '20px' }}>
-          <h3>Stake</h3>
-          <form ref={formRefStake} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ marginBottom: '10px' }}>
-              <label htmlFor="amount">Inserisci l'importo dello stake:</label>
-              <input type="number" id="amount" name="amount" placeholder="eth" required style={{ width: '200px', height: '30px', borderRadius: '5px', border: '1px solid grey', padding: '5px' }} />
-            </div>
-            <div style={{ marginBottom: '10px' }}>
-              <label htmlFor="duration">Seleziona la durata dello stake:</label>
-              <select id="duration" name="duration" value={duration} onChange={handleDurationChange} required style={{ width: '200px', height: '30px', borderRadius: '5px', border: '1px solid grey', padding: '5px' }}>
-                <option value="">Scegli una durata</option>
-                {Object.entries(StrategyOneInterface.StakeDuration).map(([key, value]) => {
-                  return <option key={key} value={value}>{key}</option>
-                })}
-              </select>
-            </div>
-            <button onClick={handleStake} style={{ backgroundColor: 'green', color: 'white', borderRadius: '5px', padding: '10px 20px', border: 'none', cursor: 'pointer' }}>Stake</button>
-          </form>
-        </div>
-
-        <div style={{ backgroundColor: 'lightcoral', padding: '20px', borderRadius: '10px', margin: '20px' }}>
-          <h3>Unstake</h3>
-          <form ref={fromRefUnstake} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ marginBottom: '10px' }}>
-              <label htmlFor="amount">Inserisci l'importo dello unstake:</label>
-              <div style={{ display: 'inline', margin: '40px' }}>
-                <button onClick={handleUnstake} style={{ backgroundColor: 'red', color: 'white', borderRadius: '5px', padding: '10px 20px', border: 'none', cursor: 'pointer' }}>Unstake</button>
-              </div>
-            </div>
-          </form>
+          <div style={styles.summary}>
+            <h4 style={styles.summaryTitle}>Transaction data</h4>
+            <table>
+              <tbody>
+                <tr>
+                  <td><strong>EndDate:</strong></td>
+                  <td>
+                    {remainingTimeFormatted.isNegative ? ":" : ""}
+                    {remainingTimeFormatted.months} months, {remainingTimeFormatted.days} days, {remainingTimeFormatted.hours} hours, {remainingTimeFormatted.minutes} minutes, {remainingTimeFormatted.secconds} seconds
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>StartDate:</strong></td>
+                  <td>{finalData.startDate ? finalData.startDate.toLocaleString() : ""}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
+
   );
 };
 
+/* return (
+  <div style={styles.container}>
+    <h2 style={styles.title}>Stake tokens to earn interest</h2>
+    <div style={styles.formContainer}>
+      <div style={{ ...styles.card, ...styles.stakeCard }}>
+        <h3 style={styles.cardTitle}>Stake</h3>
+        <form ref={formRefStake} style={styles.form}>
+          <div style={styles.formControl}>
+            <label htmlFor="amount">Inserisci l'importo dello stake:</label>
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              placeholder="eth"
+              required
+              style={styles.input}
+            />
+          </div>
+          <div style={styles.formControl}>
+            <label htmlFor="duration">Seleziona la durata dello stake:</label>
+            <select
+              id="duration"
+              name="duration"
+              value={duration}
+              onChange={handleDurationChange}
+              required
+              style={styles.select}
+            >
+              <option value="">Scegli una durata</option>
+              {Object.entries(StrategyOneInterface.StakeDuration).map(
+                ([key, value]) => {
+                  return (
+                    <option key={key} value={value}>
+                      {key}
+                    </option>
+                  );
+                }
+              )}
+            </select>
+          </div>
+          <button
+            onClick={handleStake}
+            style={{ ...styles.button, ...styles.stakeButton }}
+          >
+            Stake
+          </button>
+        </form>
+      </div>
+
+      <div style={{ ...styles.card, ...styles.unstakeCard }}>
+        <h3 style={styles.cardTitle}>Unstake</h3>
+        <form ref={fromRefUnstake} style={styles.form}>
+          <div style={styles.formControl}>
+            <label htmlFor="amount">Inserisci l'importo dello unstake:</label>
+            <div style={{ display: "inline", margin: "40px" }}>
+              <button
+                onClick={handleUnstake}
+                style={{ ...styles.button, ...styles.unstakeButton }}
+              >
+                Unstake
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div style={styles.summary}>
+      <h2 style={styles.summaryTitle}>Riepilogo dati:</h2>
+      <table>
+        <tbody>
+          <tr>
+            <td>EndDate:</td>
+            <td>
+              {remainingTimeFormatted.isNegative ? ":" : ""}
+              {remainingTimeFormatted.months} months, {remainingTimeFormatted.days} days, {remainingTimeFormatted.hours} hours, {remainingTimeFormatted.minutes} minutes, {remainingTimeFormatted.secconds} seconds
+            </td>
+          </tr>
+          <tr>
+            <td>StartDate:</td>
+            <td>{finalData.startDate ? finalData.startDate.toString() : ""}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+);
+}
+*/
+
+
+/* return (
+  <div style={styles.container}>
+    <h2 style={styles.title}>Stake tokens to earn interest</h2>
+    <div style={styles.formContainer}>
+      <div style={{ ...styles.card, ...styles.stakeCard }}>
+        <h3 style={styles.cardTitle}>Stake</h3>
+        <form ref={formRefStake} style={styles.form}>
+          <div style={styles.formControl}>
+            <label htmlFor="amount">Inserisci l'importo dello stake:</label>
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              placeholder="eth"
+              required
+              style={styles.input}
+            />
+          </div>
+          <div style={styles.formControl}>
+            <label htmlFor="duration">Seleziona la durata dello stake:</label>
+            <select
+              id="duration"
+              name="duration"
+              value={duration}
+              onChange={handleDurationChange}
+              required
+              style={styles.select}
+            >
+              <option value="">Scegli una durata</option>
+              {Object.entries(StrategyOneInterface.StakeDuration).map(
+                ([key, value]) => {
+                  return (
+                    <option key={key} value={value}>
+                      {key}
+                    </option>
+                  );
+                }
+              )}
+            </select>
+          </div>
+          <button
+            onClick={handleStake}
+            style={{ ...styles.button, ...styles.stakeButton }}
+          >
+            Stake
+          </button>
+        </form>
+      </div>
+
+      <div style={{ ...styles.card, ...styles.unstakeCard }}>
+        <h3 style={styles.cardTitle}>Unstake</h3>
+        <form ref={fromRefUnstake} style={styles.form}>
+          <div style={styles.formControl}>
+            <label htmlFor="amount">Inserisci l'importo dello unstake:</label>
+            <div style={{ display: "inline", margin: "40px" }}>
+              <button
+                onClick={handleUnstake}
+                style={{ ...styles.button, ...styles.unstakeButton }}
+              >
+                Unstake
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div style={styles.summary}>
+      <h2 style={styles.summaryTitle}>Riepilogo dati:</h2>
+      <table>
+        <tbody>
+          <tr>
+            <td>EndDate:</td>
+            <td>
+              {remainingTimeFormatted.isNegative ? ':' : ''}
+              {remainingTimeFormatted.months} months, {remainingTimeFormatted.days} days, {remainingTimeFormatted.hours} hours, {remainingTimeFormatted.minutes} minutes, {remainingTimeFormatted.secconds} seconds
+            </td>
+          </tr>
+          <tr>
+            <td>StartDate:</td>
+            <td>{finalData.startDate ? finalData.startDate.toString() : ''}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+);
+};
 */

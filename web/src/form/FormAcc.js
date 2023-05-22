@@ -7,48 +7,109 @@ import setDefaultAddressContracts from "../utils/setDefaultAddressContracts";
 import "react-notifications/lib/notifications.css";
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 
+const styles = {
+  container: {
+
+    width: "100% ",
+    height: "100%",
+    fontFamily: "Arial, sans-serif",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    boxSizing: "content-box",
 
 
-const buttonStyle = {
-  backgroundColor: "#4CAF50",
-  border: "none",
-  color: "white",
-  padding: "12px 24px",
-  textAlign: "center",
-  textDecoration: "none",
-  display: "inline-block",
-  fontSize: "16px",
-  margin: "4px 2px",
-  borderRadius: "5px",
-  cursor: "pointer",
+  },
+  title: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: "2rem",
+    marginBottom: "30px",
+  },
+  formContainer: {
+    display: "flex",
+    justifyContent: "center",
+    gap: "20px",
+  },
+  form: {
+    display: "grid",
+    gridTemplateColumns: "repeat(1, 1fr)",
+    gridColumnGap: "20px",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: "20px",
+    backgroundColor: "#f2f2f2",
+    padding: "20px",
+    borderRadius: "10px",
+    width: "40vw",
+  },
+  formSection: {
+    marginBottom: "20px",
+  },
+  label: {
+    fontSize: "16px",
+    fontWeight: "bold",
+    marginBottom: "8px",
+    justifyContent: "center",
+  },
+  input: {
+    width: "100%",
+    padding: "12px 20px",
+    margin: "8px 0",
+    boxSizing: "border-box",
+    borderRadius: "5px",
+    border: "2px solid #ccc",
+
+  },
+  button: {
+    backgroundColor: "#4CAF50",
+    border: "none",
+    color: "white",
+    padding: "12px 24px",
+    textAlign: "left",
+    textDecoration: "none",
+    display: "inline-block",
+    fontSize: "16px",
+    margin: "30px 10px",
+    borderRadius: "5px",
+    cursor: "pointer",
+
+
+  },
+  note: {
+    fontSize: "18px",
+    fontStyle: "italic",
+    marginBottom: "8px",
+    color: "#613b1e",
+  },
+  durationText: {
+    fontSize: "14px",
+    marginTop: "20px",
+    textAlign: "center",
+  },
+  conversion: {
+    fontSize: "18px",
+    color: "#613b1e",
+  },
+  buttonw: {
+
+    backgroundColor: "#e3242d",
+    border: "none",
+    color: "white",
+    padding: "12px 24px",
+    textAlign: "center",
+    textDecoration: "none",
+    display: "inline-block",
+    fontSize: "16px",
+    margin: "10px 30px",
+    borderRadius: "5px",
+    cursor: "pointer",
+
+  }
+
 };
 
-const formStyle = {
-  display: "grid",
-  gridTemplateColumns: "repeat(2, 1fr)",
-  gridColumnGap: "20px",
-  alignItems: "center",
-  justifyContent: "center",
-  margin: "20px",
-  backgroundColor: "#f2f2f2",
-  padding: "20px",
-  borderRadius: "10px",
-};
-
-const inputStyle = {
-  width: "100%",
-  padding: "12px 20px",
-  margin: "8px 0",
-  boxSizing: "border-box",
-  borderRadius: "5px",
-  border: "2px solid #ccc",
-};
-
-const labelStyle = {
-  fontSize: "16px",
-  fontWeight: "bold",
-  marginBottom: "8px",
-};
 
 export default function FormAcc() {
   const [duration, setDuration] = useState("");
@@ -165,9 +226,94 @@ export default function FormAcc() {
     const cashInEth = (e.target.value / convesionRate).toString()
     setAmountInCash(cashInEth);
   }
-
-
   return (
+    <div style={styles.container}>
+      <h2 style={styles.title}>
+        Accumulation plan strategy (*Dollar Cost Averaging Strategy*)
+      </h2>
+      <p style={styles.note}>
+        <strong>(Dollar cost averaging Tehory)</strong>
+      </p>
+      <div style={styles.formContainer}>
+        <form style={styles.form} ref={formRefBuy}>
+          <div style={styles.formSection}>
+            <h3>Buy AkToken</h3>
+            <label style={styles.label} htmlFor="amount">
+              Please enter the deposit amount
+            </label>
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              placeholder={`Min. deposit ${minAkTokenAmount} ETH`}
+              required
+              onChange={handleConvertion}
+              style={styles.input}
+            />
+            <label style={styles.label} htmlFor="duration">
+              Select investment plan:
+            </label>
+            <select
+              id="duration"
+              name="duration"
+              value={duration}
+              onChange={handleDurationChange}
+              required
+              style={styles.input}
+            >
+              <option value="">Duration </option>
+              {Object.entries(StrategyTwoInterface.AccumulationDuration).map(
+                ([key, value]) => {
+                  return (
+                    <option key={key} value={value}>
+                      {key}
+                    </option>
+                  );
+                }
+              )}
+            </select>
+            <button onClick={handleBuy} style={styles.button}>
+              Buy AkToken
+            </button>
+          </div>
+          <div style={styles.conversion}>
+            <h3>Conversion rate AK/Cash: <strong><mark>{amountInCash}</mark></strong> </h3></div>
+        </form>
+        <form style={styles.form} ref={formRefWhitdraw}>
+          <div style={styles.formSection}>
+
+            <label style={styles.label} htmlFor="withdrawAmount">
+              Enter the amount you wish to withdraw
+            </label>
+            <input
+              type="number"
+              id="withdrawAmount"
+              name="withdrawAmount"
+              placeholder="ETH"
+              value={withdrawAmount}
+              onChange={handleWithdrawAmountChange}
+              required
+              style={styles.input}
+            />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <button onClick={handleWhitdraw} style={styles.buttonw}>
+                Sell AkToken
+              </button>
+            </div>
+          </div>
+          <h4>* You may not sell all the tokens purchased ,but you must leave until the agreed duration the amount corresponding to the first deposit</h4>
+        </form>
+      </div>
+      <p style={styles.durationText}>
+        <strong>*You can choose a duration of 5, 10, or 15 years for the accumulation plan</strong>
+      </p>
+      <NotificationContainer />
+    </div>
+  );
+};
+
+
+/*   return (
     <div style={{ width: "auto", height: "10rem" }}>
       <h2>Start accumulating AkToken using the dollar cost averaging strategy!</h2>
       <div style={formStyle}>
@@ -244,6 +390,6 @@ export default function FormAcc() {
       </div>
     </div>
   );
-};
+}; */
 
 

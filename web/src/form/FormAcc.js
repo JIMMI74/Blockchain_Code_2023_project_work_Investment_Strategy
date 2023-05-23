@@ -93,6 +93,7 @@ const styles = {
   conversion: {
     fontSize: "18px",
     color: "#613b1e",
+    fontStyle: "italic",
   },
   buttonw: {
 

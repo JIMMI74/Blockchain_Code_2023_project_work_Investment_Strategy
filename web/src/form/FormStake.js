@@ -19,7 +19,8 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     background: "#265980",
-    padding: "20px",
+    padding: "10px",
+    marginBottom: "60px",
   },
 
   title: {

@@ -75,7 +75,7 @@ const styles = {
     margin: "30px 10px",
     borderRadius: "5px",
     cursor: "pointer",
-    marginLeft: "150px",
+    marginLeft: "140px",
 
 
   },
@@ -111,7 +111,7 @@ const styles = {
   },
   colorform: {
     backgroundColor: "#4CAF50",
-    height: "50vh",
+    height: "auto",
     width: "50vw",
     marginTop: "20px",
   }
@@ -127,6 +127,7 @@ export default function FormAcc() {
   const [convesionRate, setConvesionRate] = useState(0);
   const [amountInCash, setAmountInCash] = useState(0);
   const [minAkTokenAmount, setMinAkTokenAmount] = useState(0);
+
 
 
   useEffect(() => {
@@ -323,83 +324,5 @@ export default function FormAcc() {
 };
 
 
-/*   return (
-    <div style={{ width: "auto", height: "10rem" }}>
-      <h2>Start accumulating AkToken using the dollar cost averaging strategy!</h2>
-      <div style={formStyle}>
-        <div>
-          <h3>Buy AkToken</h3>
-          <form ref={formRefBuy}>
-            <label style={labelStyle} htmlFor="amount">
-              Enter the deposit amount:
-            </label>
-            <input
-              type="number"
-              id="amount"
-              name="amount"
-              placeholder={`ETH min ${minAkTokenAmount} ETH`}
-              required
-              onChange={handleConvertion}
-              style={inputStyle}
-            />
-            <h4>Amount in Cash: {amountInCash}</h4>
-            <label style={labelStyle} htmlFor="duration">
-              Select the duration of theplane:
-            </label>
-            <select
-              id="duration"
-              name="duration"
-              value={duration}
-              onChange={handleDurationChange}
-              required
-              style={inputStyle}
-            >
-              <option value="">Select Plane</option>
-              {Object.entries(StrategyTwoInterface.AccumulationDuration).map(
-                ([key, value]) => {
-                  return (
-                    <option key={key} value={value}>
-                      {key}
-                    </option>
-                  );
-                }
-              )}
-            </select>
-            <button onClick={handleBuy} style={buttonStyle}>
-              Buy AkToken
-            </button>
-          </form>
-        </div>
-
-        <div>
-          <h3>Withdraw</h3>
-          <form ref={formRefWhitdraw}>
-            <label style={labelStyle} htmlFor="withdrawAmount">
-              Enter the amount you want to withdraw:
-            </label>
-            <input
-              type="number"
-              id="withdrawAmount"
-              name="withdrawAmount"
-              placeholder="ETH"
-              value={withdrawAmount}
-              onChange={handleWithdrawAmountChange}
-              required
-              style={inputStyle}
-            />
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <button onClick={handleWhitdraw} style={buttonStyle}>
-                Withdraw
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-      <NotificationContainer />
-      <div>
-      </div>
-    </div>
-  );
-}; */
 
 

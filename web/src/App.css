@@ -9,6 +9,7 @@
 .main{
   width: 100%;
   height: 50vh; 
+  background-color: rgb(32, 218, 196);
  
 }
 .nav-links {
@@ -132,24 +133,11 @@
     flex-direction: column;
     border: 5px solid black;
     background-color: rgb(108, 116, 114);
+    margin-bottom: 50px;
    
    
     width: auto;
-    height: 50vh;  
-  }
-
-.insert{
-    
-    display: flex;
-    flex-direction: wrap;
-    justify-content: space-around;
-    align-items: center;
-    flex-direction: column;
-    border:5px solid yellowgreen;
-    background-color:cornflowerblue;
-    width: auto;
-    height: 50vh;  
-  
+    height: auto;  
   }
 
   /*    */
@@ -238,7 +226,7 @@
   background-color: yellowgreen;
   font-size: 20px;
   
-  box-shadow:5px 5px 100px black;
+  box-shadow:5px 5px 100px black 2px;
   width:6vw;
   height:3vh;
   gap: 5px;
@@ -257,7 +245,14 @@
   justify-content: center;
   
   padding: 2rem;
-   background-color: slategrey;
+  background-color: slategrey;
+  margin-top: 4rem;
+ 
+}
+.border-primary{
+  
+ 
+  background-color: rgb(242, 89, 89);
 }
 
 .strategy-container {
@@ -288,6 +283,7 @@
   background-color:moccasin;
   border-radius: 8px;
   margin-bottom: 20px;
+  margin-top: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease-in-out;
   position: relative;
@@ -349,3 +345,62 @@
   color: sienna;
 
 }
+.coupon {
+  max-width: 7%;
+  size:7%;
+  align-self: start;
+  border-radius: 50%;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-style: solid;
+  height: auto;
+  box-shadow: 2px 2px 20px 20px rgb(163, 232, 232) ;
+
+
+}
+.titleCoupon{
+  display: flex;
+  align-self: start;
+  margin-top: 10px;
+  margin-left: 10px;
+  font-style: italic;
+}
+.aktoken {
+  width: 7%;
+  size:7%;
+  align-self: start;
+  border-radius: 50%;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-style: solid;
+  margin-top: 3rem;
+  margin-left: 40px;
+  height: auto;
+  box-shadow: 2px 2px 20px 20px rgb(163, 232, 232) ;
+  
+
+
+}
+.titleaktoken{
+  display: flex;
+  align-self: start;
+  margin-left: 40px;
+  margin-top: 10px;
+  font-style: italic;
+
+}
+
+.insert{
+    
+    display: flex;
+    flex-direction: wrap;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    border:5px solid yellowgreen;
+    background-color:cornflowerblue;
+    width: auto;
+    height: 70vh;
+    padding-bottom: 10rem;  
+  
+  }

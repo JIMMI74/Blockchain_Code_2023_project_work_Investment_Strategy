@@ -310,6 +310,9 @@ const Home = () => {
         <FormStake stakedData={stakedData} />
       </div>
       <div className="insert">
+        <div className="titlestewo">
+          <h3 className="titletewo"> <span>Accumulation Plan Strategy</span> <span>Dollar Cost Averaging</span> <span>Theory</span></h3>
+        </div>
         <img src={aktoken} alt="aktoken" className="aktoken" />
         <img src={pac} alt="pac" className="pac" />
         <h1 className="titleaktoken">AkToken</h1>

@@ -20,13 +20,16 @@ const styles = {
     boxSizing: "content-box",
 
 
+
+
   },
   title: {
     marginTop: "10px",
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: "2rem",
-    marginBottom: "30px",
+    fontSize: "4rem",
+    paddingBottom: "3rem",
+    fontStyle: "italic",
   },
   formContainer: {
     display: "flex",
@@ -34,6 +37,8 @@ const styles = {
     gap: "20px",
     height: "40vh",
     width: "50vw",
+
+
   },
   form: {
     display: "grid",
@@ -46,9 +51,13 @@ const styles = {
     padding: "20px",
     borderRadius: "10px",
     width: "40vw",
+
+
   },
   formSection: {
-    marginBottom: "20px",
+    marginBottom: "50px",
+
+
   },
   label: {
     fontSize: "16px",
@@ -67,7 +76,7 @@ const styles = {
   },
   button: {
     backgroundColor: "#236624",
-    border: "none",
+    borderColor: "10px ##030202",
     color: "white",
     padding: "12px 24px",
     textAlign: "left",
@@ -100,7 +109,6 @@ const styles = {
   buttonw: {
 
     backgroundColor: "#e3242d",
-    border: "none",
     color: "white",
     padding: "12px 24px",
     textAlign: "center",
@@ -110,13 +118,15 @@ const styles = {
     margin: "10px 30px",
     borderRadius: "5px",
     cursor: "pointer",
+    borderColor: "10px ##030202",
 
   },
   colorform: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#555c06",
     height: "auto",
     width: "50vw",
     marginTop: "20px",
+    borderRadius: "10px",
   }
 
 };
@@ -240,9 +250,6 @@ export default function FormAcc() {
   }
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>
-        Accumulation plan strategy (*Dollar Cost Averaging Strategy*)
-      </h1>
       <p style={styles.note}>
         <strong>(Dollar cost averaging Tehory)</strong>
       </p>

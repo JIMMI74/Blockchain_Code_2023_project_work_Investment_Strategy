@@ -374,7 +374,7 @@
   flex-direction: column;
   justify-content: flex-end;
   border-style: solid;
-  margin-top: 18rem;
+  margin-top: 10px;
   margin-left: 40px;
   height: auto;
   box-shadow: 2px 2px 20px 20px rgb(163, 232, 232) ;
@@ -399,11 +399,13 @@
     justify-content: space-around;
     align-items: center;
     flex-direction: column;
-    border:5px solid yellowgreen;
-    background-color:cornflowerblue;
+    border:5px solid rgb(9, 9, 9);
+    background-color:rgb(132, 159, 211);
     width: auto;
     height: 120vh;
-    padding-bottom: 10rem;  
+    padding: 30;  
+    box-sizing: content-box;
+   
   
   }
   .pac{
@@ -421,13 +423,14 @@
 }
 
 .wrapper {
-  background: radial-gradient(#272727, #1b1b1b);
+  
   display: grid;
   grid-template-areas: 'overlap';
   place-content: center;
   text-transform: uppercase;
   height: 3%;
   width: auto;
+
 }
 .wrapper > div {
   background-clip: text;  
@@ -439,6 +442,7 @@
   grid-area: overlap;
   letter-spacing: 1px;
   -webkit-text-stroke: 4px transparent;
+  margin-top: 100px;
 }
 div.bg {
   background-image: repeating-linear-gradient( 105deg, 
@@ -457,4 +461,28 @@ div.fg{
     var(--gold) 31%);
   color: #1e2127;
   transform: scale(1);
+}
+.titlestewo{
+   background-color: #7e7360;
+  text-align: center;
+  border-radius: 10px;
+  margin-top: 30px;
+}
+
+.titletewo {
+  /* margin: 20px; */
+  font-family: "Paytone One", sans-serif;
+  color: #181818;
+  text-transform: uppercase;
+  letter-spacing: -2px;
+}
+
+.titletewo span {
+  display: block;
+  margin: 11px 0 17px 0;
+  font-size: 80px;
+  line-height: 80px;
+  color: #f6f2ef;
+  text-shadow: 0 10px 10px #b8a381,0 -5px 5px #100f0f;
+  letter-spacing: -4px;
 }

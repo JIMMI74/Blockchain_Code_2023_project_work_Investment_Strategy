@@ -11,7 +11,7 @@ const styles = {
   container: {
 
     width: "100% ",
-    height: "100%",
+    height: "%",
     fontFamily: "Arial, sans-serif",
     display: "flex",
     flexDirection: "column",
@@ -32,6 +32,8 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     gap: "20px",
+    height: "40vh",
+    width: "50vw",
   },
   form: {
     display: "grid",

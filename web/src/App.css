@@ -361,9 +361,10 @@
 .titleCoupon{
   display: flex;
   align-self: start;
-  margin-top: 10px;
+  margin-top: 10rem;
   margin-left: 10px;
   font-style: italic;
+  font-size: 4rem;
 }
 .aktoken {
   width: 7%;
@@ -373,7 +374,7 @@
   flex-direction: column;
   justify-content: flex-end;
   border-style: solid;
-  margin-top: 3rem;
+  margin-top: 18rem;
   margin-left: 40px;
   height: auto;
   box-shadow: 2px 2px 20px 20px rgb(163, 232, 232) ;
@@ -385,8 +386,9 @@
   display: flex;
   align-self: start;
   margin-left: 50px;
-  margin-top: 10px;
+ 
   font-style: italic;
+  font-size: 4rem;
 
 }
 
@@ -400,7 +402,59 @@
     border:5px solid yellowgreen;
     background-color:cornflowerblue;
     width: auto;
-    height: 70vh;
+    height: 120vh;
     padding-bottom: 10rem;  
   
   }
+  .pac{
+  margin-left: 350px;
+  width: 30%;
+  box-shadow: 2px 2px 100px 30px rgb(165, 219, 15) ;
+  border-radius: 3%;
+  
+    
+  }
+  :root {
+  --gold: #ffb338;
+  --light-shadow: #77571d;
+  --dark-shadow: #3e2904;
+}
+
+.wrapper {
+  background: radial-gradient(#272727, #1b1b1b);
+  display: grid;
+  grid-template-areas: 'overlap';
+  place-content: center;
+  text-transform: uppercase;
+  height: 3%;
+  width: auto;
+}
+.wrapper > div {
+  background-clip: text;  
+  -webkit-background-clip: text;
+  color: #363833;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 900;
+  font-size: clamp( 3em, 18vw, 15rem);
+  grid-area: overlap;
+  letter-spacing: 1px;
+  -webkit-text-stroke: 4px transparent;
+}
+div.bg {
+  background-image: repeating-linear-gradient( 105deg, 
+    var(--gold) 0% , 
+    var(--dark-shadow) 5%,
+    var(--gold) 12%);
+  color: transparent;
+  filter: drop-shadow(5px 15px 15px black);
+  transform: scaleY(1.05);
+  transform-origin: top;
+}
+div.fg{
+  background-image: repeating-linear-gradient( 5deg,  
+    var(--gold) 0% , 
+    var(--light-shadow) 23%, 
+    var(--gold) 31%);
+  color: #1e2127;
+  transform: scale(1);
+}

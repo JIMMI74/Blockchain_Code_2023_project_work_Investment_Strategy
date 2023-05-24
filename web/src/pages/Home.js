@@ -14,6 +14,7 @@ import Web3 from "web3";
 import React from "react";
 import coupon from "../img/coupon.png";
 import aktoken from "../img/aktoken.jpeg";
+import pac from "../img/pac.png";
 
 import "../App.css";
 import setDefaultAddressContracts from '../utils/setDefaultAddressContracts';
@@ -299,19 +300,22 @@ const Home = () => {
     <div className="main">
       <Navbar account={account} balanceCashTokenUser={balanceCashTokenUser.toLocaleString()} balanceCouponUser={balanceCouponUser.toLocaleString()} BalanceAkToken={BalanceUserAKToken.toLocaleString()} BalanceUSDTcash={BalanceUserUSDT.toLocaleString()} />
       <div className="container">
+        <div class="wrapper">
+          <div class="bg"> STAKE </div>
+          <div class="fg"> STAKE </div>
+        </div>
         <img src={coupon} alt="coupon" className="coupon" />
         <h1 className="titleCoupon">Coupon</h1>
 
         <FormStake stakedData={stakedData} />
       </div>
       <div className="insert">
-
         <img src={aktoken} alt="aktoken" className="aktoken" />
+        <img src={pac} alt="pac" className="pac" />
         <h1 className="titleaktoken">AkToken</h1>
 
-
         <FormAcc />
-        <div></div>
+
       </div>
 
       <div className="dashboard border-primary">

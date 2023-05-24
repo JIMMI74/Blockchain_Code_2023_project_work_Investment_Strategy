@@ -40,8 +40,9 @@ const styles = {
     padding: "20px",
     borderRadius: "10px",
     boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-    minWidth: "300px",
+    minWidth: "500px",
     width: "fit-content",
+    marginBottom: "50px",
   },
   stakeCard: {
     backgroundColor: "#eaf7f7",

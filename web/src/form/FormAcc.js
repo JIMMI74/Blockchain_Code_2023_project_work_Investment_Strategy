@@ -238,9 +238,9 @@ export default function FormAcc() {
   }
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>
+      <h1 style={styles.title}>
         Accumulation plan strategy (*Dollar Cost Averaging Strategy*)
-      </h2>
+      </h1>
       <p style={styles.note}>
         <strong>(Dollar cost averaging Tehory)</strong>
       </p>

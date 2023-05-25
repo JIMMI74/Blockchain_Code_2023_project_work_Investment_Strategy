@@ -14,6 +14,7 @@
 }
 .nav-links {
   list-style-type: none;
+  margin-top: 30px;
 }
 .APP-a {
   text-decoration: none;
@@ -22,7 +23,7 @@
 
 .App-nav {
   padding: 10px;
-  background-color: rgb(32, 218, 196);
+  background-color: rgb(147, 242, 231);
 
   box-shadow: 0 1px 10px black;
 }
@@ -45,8 +46,8 @@
   transform: rotate(-90deg);
 }
 .logo {
-  width: 4.5em;
-  height: 4.5em;
+  width: 6em;
+  height: 6em;
   margin-left: 1rem;
 }
 .nav-links a {
@@ -507,7 +508,8 @@ div.fg{
 }
 
 .green-text{
-  color: green;
+  color: rgb(53, 141, 5);
+  
 
 }
 .gap{
@@ -525,10 +527,13 @@ font-family: Arial, Helvetica, sans-serif;
 
 .strategygroup {
   position: relative;
+  margin-top: 10px;
 }
 
 .strategygroup h2 {
-  
+  /*font-family: "Apple Braille',sans-serif";*/
+  font-family: "Paytone One", sans-serif;
+  /*font-family:"poppins",sans-serif;*/
   text-shadow: 0 10px 10px #141413,0 -5px 5px #100f0f;
   font-size: 5em;
   position: absolute;

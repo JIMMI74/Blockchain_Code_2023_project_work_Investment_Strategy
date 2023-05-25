@@ -29,7 +29,8 @@ const styles = {
     fontWeight: "bold",
     fontSize: "2rem",
     marginBottom: "30px",
-    color: "#333",
+    // color: "#333",
+    color: "#ECECEC"
   },
   formContainer: {
     display: "flex",

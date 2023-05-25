@@ -54,10 +54,10 @@ const Navbar = (props) => {
         </ul>
         <small style={{ fontSize: "20px", fontFamily: "italic" }}>
           <p className="white-text ">ACCOUNT NUMBER : <strong>{props.account}</strong></p>
-          <p className="green-text gap margin">Balance CashToken (stake) : <strong>{props.balanceCashTokenUser}</strong></p>
-          <p className="blue-text gap" >Total Cupon Received from Stake: <strong>{props.balanceCouponUser}</strong></p>
-          <p className="green-text gap">Balance USDTCash (accumulation): <strong>{props.BalanceUSDTcash}</strong></p>
-          <p className="gold-text ">Total AkToken Received from Accumulation Plane: <strong>{props.BalanceAkToken}</strong></p>
+          <p className="green-text gap margin"><strong>Balance CashToken (stake) : {props.balanceCashTokenUser}</strong></p>
+          <p className="blue-text gap" ><strong>Total Cupon Received from Stake: {props.balanceCouponUser}</strong></p>
+          <p className="green-text gap"><strong>Balance USDTCash (accumulation): {props.BalanceUSDTcash}</strong></p>
+          <p className="gold-text "><strong>Total AkToken Received from Accumulation Plane: {props.BalanceAkToken}</strong></p>
         </small>
 
         <ul className="social-icons">

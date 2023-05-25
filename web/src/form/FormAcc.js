@@ -253,7 +253,7 @@ export default function FormAcc() {
   return (
     <div style={styles.container}>
       <p style={styles.note}>
-        <strong>(Dollar cost averaging Tehory)</strong>
+        <strong>"Markets serve to transfer wealth from the impatient to the patient" (W. Buffett)</strong>
       </p>
       <div style={styles.colorform}>
         <div style={styles.formContainer}>

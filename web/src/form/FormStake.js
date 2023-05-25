@@ -98,7 +98,8 @@ const styles = {
     backgroundColor: "#2e8b57",
   },
   unstakeButton: {
-    backgroundColor: "#ff6e6e",
+    backgroundColor: "#ab0909",
+
   },
   buttonHover: {
     backgroundColor: "#45a049",
@@ -126,6 +127,22 @@ const styles = {
     fontFamily: "Arial, sans-serif",
 
   },
+  time: {
+    fontFamily: "Apple Braille',sans-serif",
+    fontSize: "1.3rem",
+    color: "black",
+    marginLeft: "10px",
+
+  },
+  timemargin: {
+    marginTop: "20px",
+    display: "flex",
+    justifyContent: "center",
+
+  },
+  font: {
+    fontSize: "1.3rem",
+  }
 
 };
 
@@ -403,18 +420,18 @@ export default function FormStake({ stakedData }) {
           </form>
           <div style={styles.summary}>
             <h4 style={styles.summaryTitle}>Transaction data</h4>
-            <table>
-              <tbody>
-                <tr>
+            <table style={styles.timemargin}>
+              <tbody style={styles.font} >
+                <tr style={styles.timemargin}>
                   <td><strong>EndDate:</strong></td>
-                  <td>
+                  <td style={styles.time}>
                     {remainingTimeFormatted.isNegative ? ":" : ""}
                     {remainingTimeFormatted.months} months, {remainingTimeFormatted.days} days, {remainingTimeFormatted.hours} hours, {remainingTimeFormatted.minutes} minutes, {remainingTimeFormatted.secconds} seconds
                   </td>
                 </tr>
                 <tr>
                   <td><strong>StartDate:</strong></td>
-                  <td>{finalData.startDate ? finalData.startDate.toLocaleString() : ""}</td>
+                  <td style={styles.time}>{finalData.startDate ? finalData.startDate.toLocaleString() : ""}</td>
                 </tr>
               </tbody>
             </table>

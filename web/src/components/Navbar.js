@@ -10,6 +10,12 @@ import logo from "../img/logo.png"
 const Navbar = (props) => {
   return (
     <nav className="App-nav">
+      <section>
+        <div className="strategygroup">
+          <h2>STRATEGYGROUP</h2>
+          <h2>STRATEGYGROUP</h2>
+        </div>
+      </section>
       <div className="nav-center">
         <div className="nav-header">
           <img className="logo" alt="logo" src={logo} />
@@ -19,39 +25,39 @@ const Navbar = (props) => {
         </div>
 
 
-        <ul className="nav-links">
-          <li>
-            <a className="App-a" href="./index.html">
+        <ul className="nav-links" >
+          <li >
+            <a className="App-a" href="./index.html" style={{ fontSize: "20px", fontFamily: "italic" }}>
               home
             </a>
           </li>
 
-          <li>
-            <Link to="/login">Login</Link>
+          <li >
+            <Link to="/login" style={{ fontSize: "20px", fontFamily: "italic" }}>Login</Link>
           </li>
 
 
           <li>
-            <Link to="/logout">Logout</Link>
+            <Link to="/logout" style={{ fontSize: "20px", fontFamily: "italic" }}>Logout</Link>
           </li>
 
 
           <li>
-            <Link to="/user">User</Link>
+            <Link to="/user" style={{ fontSize: "20px", fontFamily: "italic" }}>User</Link>
           </li>
 
 
           <li>
-            <Link to="/register">Register</Link>
+            <Link to="/register" style={{ fontSize: "20px", fontFamily: "italic" }}>Register</Link>
           </li>
 
         </ul>
-        <small>
-          <p className="App-p">ACCOUNT NUMBER : <strong>{props.account}</strong></p>
-          <p>Balance CashToken (stake) : <strong>{props.balanceCashTokenUser}</strong></p>
-          <p>Total Cupon Received from Stake: <strong>{props.balanceCouponUser}</strong></p>
-          <p>Balance USDTCash (accumulation): <strong>{props.BalanceUSDTcash}</strong></p>
-          <p>Total AkToken Received from Acccumulation Plane: <strong>{props.BalanceAkToken}</strong></p>
+        <small style={{ fontSize: "20px", fontFamily: "italic" }}>
+          <p className="white-text ">ACCOUNT NUMBER : <strong>{props.account}</strong></p>
+          <p className="green-text gap margin">Balance CashToken (stake) : <strong>{props.balanceCashTokenUser}</strong></p>
+          <p className="blue-text gap" >Total Cupon Received from Stake: <strong>{props.balanceCouponUser}</strong></p>
+          <p className="green-text gap">Balance USDTCash (accumulation): <strong>{props.BalanceUSDTcash}</strong></p>
+          <p className="gold-text ">Total AkToken Received from Accumulation Plane: <strong>{props.BalanceAkToken}</strong></p>
         </small>
 
         <ul className="social-icons">

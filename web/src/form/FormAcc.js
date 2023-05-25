@@ -18,6 +18,7 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     boxSizing: "content-box",
+    marginBottom: "80px",
 
 
 
@@ -102,6 +103,7 @@ const styles = {
     textAlign: "center",
   },
   conversion: {
+    display: "flex",
     fontSize: "18px",
     color: "#613b1e",
     fontStyle: "italic",
@@ -265,7 +267,7 @@ export default function FormAcc() {
                 type="number"
                 id="amount"
                 name="amount"
-                placeholder={`Min. deposit ${minAkTokenAmount} AkTokens`}
+                placeholder={`Minimum purchase ${minAkTokenAmount} AkToken`}
                 required
                 onChange={handleConvertion}
                 style={styles.input}

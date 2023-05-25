@@ -11,10 +11,8 @@ module.exports = async function (deployer, network, accounts) {
   await deployer.deploy(USDTCash);
   const usdtCash = await USDTCash.deployed();
   console.log("Deployed USDTCash at address: ", usdtCash.address);
+
   const conversionRate = 2;
-
-
-
 
   console.log("Conversion rate set to: ", conversionRate);
   // Deploy StrategyTwo contract with USDTJ ,AkToken addresses as parameters

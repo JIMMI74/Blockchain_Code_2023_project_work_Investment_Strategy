@@ -156,16 +156,16 @@ export default function FormStake({ stakedData }) {
 
 
   useEffect(() => {
-    console.warn('stakedData', stakedData);
+    console.log('stakedData', stakedData);
     if (stakedData !== undefined) { // il calculate lo faccio subito la prima volta cosi ho i dati pronti
       calculateData(stakedData);
 
     }
-    if (stakedData !== undefined && stakedData.duration === '0') return;
+    if (stakedData === undefined || stakedData.duration === '0') return;
     const timer = setInterval(() => { // ogni secondo aggiorno il timer del remaing time
       if (finalData.remainingTime !== undefined) {
         console.log("finalData start", finalData);
-        console.warn('timer in setInterval :', timer);
+        console.log('timer in setInterval :', timer);
         const remaing = calculateData(stakedData);
 
         setRemainingTimeFormatted(remaing);
@@ -178,14 +178,14 @@ export default function FormStake({ stakedData }) {
           remaing.hours = 0;
           remaing.days = 0;
           remaing.negative = false;
-          remaing.years = 0;
+          remaing.yars = 0;
           remaing.months = 0;
           remaing.hasEnded = false;
           remaing.hasStarted = false;
         }
       }
     }, 1000);
-    console.warn('timer', timer);
+    console.log('timer', timer);
 
     return () => {
       clearInterval(timer);
@@ -219,6 +219,8 @@ export default function FormStake({ stakedData }) {
 
     return remainingTimeParse;
   }
+
+
   function timeToDate(secconds) {
 
     if (secconds === 0)

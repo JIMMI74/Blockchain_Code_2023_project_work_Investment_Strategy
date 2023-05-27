@@ -28,10 +28,10 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
     }
 
     enum AccumulationDuration {
-        DEV, // Durata di 10 secondi per il test dello sviluppatore
-        FIVE_YEARS, // Durata di 5 anni
-        TEN_YEARS, // Durata di 10 anni
-        FIFTEEN_YEARS // Durata di 15 anni
+        DEV, // Durata di 10 secondi per il test dello sviluppatore 0
+        FIVE_YEARS, // Durata di 5 anni  1
+        TEN_YEARS, // Durata di 10 anni  2
+        FIFTEEN_YEARS // Durata di 15 anni  3
     }
 
     mapping(address => User) public users; // Mapping degli utenti
@@ -157,6 +157,8 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
         }
         users[msg.sender].balance -= akkTokenAmount;
 
+        
+
         // Trasferisce la quantità di akkToken user => StrategyTwo
         // lato cliente approvazione di akktoken.approve(strategy.address,akktoken,account)
         SafeERC20.safeTransferFrom(
@@ -165,6 +167,14 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
             address(this),
             akkTokenAmount
         );
+
+        if (users[msg.sender].balance == 0){
+            // se il saldo e 0
+            // 0 => 0
+            users[msg.sender].firstDepositTime = 0;
+            users[msg.sender].lastDepositTime = 0;
+            users[msg.sender].duration = AccumulationDuration.DEV;
+        }
 
         // Brucia gli AkToken ricevuti dall'utente
         akkToken.burnFrom(address(this), akkTokenAmount);

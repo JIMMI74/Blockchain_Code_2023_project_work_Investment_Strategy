@@ -34,6 +34,8 @@ const Home = () => {
   const [BalanceUserUSDT, setBalanceUserUSDT] = useState(0)
   const [BalanceUserAKToken, setBalanceUserAKToken] = useState(0)
 
+  /* */
+  const [users, setUsers] = useState();
 
 
 
@@ -181,6 +183,7 @@ const Home = () => {
     setStakedData(staked);
     const usersAcc = await StrategyTwoInterface.users(accounts[0]);
     console.log({ usersAcc });
+    setUsers(usersAcc);
   }
 
   async function reloadAllBalances() {
@@ -193,8 +196,8 @@ const Home = () => {
     LoadBalanceUSDTStTwo()
     LoadBalanceUserUSDTCash()
     LoadBalanceUserAkToken()
-
     setStakedData(await StrategyOneInterface.stakingData(account));
+    setUsers(await StrategyTwoInterface.users(account));
 
   }
   async function handleAccountsChanged(accounts) {
@@ -317,7 +320,7 @@ const Home = () => {
         <img src={pac} alt="pac" className="pac" />
         <h1 className="titleaktoken">AkToken</h1>
 
-        <FormAcc />
+        <FormAcc users={users} />
 
       </div>
 

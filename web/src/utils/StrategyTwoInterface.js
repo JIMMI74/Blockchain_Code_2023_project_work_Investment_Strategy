@@ -27,7 +27,7 @@ StrategyTwoInterface.getDurationByValue = (duration) => {
     if (value === duration)
       risultato = key
   });
-  console.warn(key_value[0], risultato)
+  console.log(key_value[0], risultato)
   */
 }
 
@@ -53,7 +53,6 @@ StrategyTwoInterface.users = async (address) => {
   console.log(result)
   return result;
 }
-
 StrategyTwoInterface.buyAkkToken = (address, amount, duration) => {
 
   return StrategyTwoContract.methods.buyAkkToken(amount, duration).send({ from: address, gas: 3000000 });
@@ -70,6 +69,9 @@ StrategyTwoInterface.MIN_AK_TOKEN_AMOUNT = () => {
 
 StrategyTwoInterface.withdrawAkkToken = (address, amount) => {
   return StrategyTwoContract.methods.withdrawAkkToken(amount).send({ from: address, gas: 3000000 });
+}
+StrategyTwoInterface.calculateDuration = async (duration) => {
+  return await StrategyTwoContract.methods.calculateDuration(duration).call()
 }
 
 StrategyTwoInterface.AkkTokenBought = () => {

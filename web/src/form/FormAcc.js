@@ -7,6 +7,7 @@ import setDefaultAddressContracts from "../utils/setDefaultAddressContracts";
 import "react-notifications/lib/notifications.css";
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 
+
 const styles = {
   container: {
 
@@ -129,12 +130,17 @@ const styles = {
     width: "50vw",
     marginTop: "20px",
     borderRadius: "10px",
-  }
+  },
+  summaryTitle: {
+    marginBottom: "10px",
+    fontSize: "20px",
+    fontFamily: "Italic",
+  },
 
 };
 
 
-export default function FormAcc() {
+export default function FormAcc({ users }) {
   const [duration, setDuration] = useState("");
   const formRefBuy = useRef(null);
   const formRefWhitdraw = useRef(null);
@@ -142,13 +148,110 @@ export default function FormAcc() {
   const [convesionRate, setConvesionRate] = useState(0);
   const [amountInCash, setAmountInCash] = useState(0);
   const [minAkTokenAmount, setMinAkTokenAmount] = useState(0);
+  const [remainingTimeFormatted, setRemainingTimeFormatted] = useState("non settato");
+  const [finalData, setFinalData] = useState({});
 
 
 
   useEffect(() => {
     StrategyTwoInterface.rate().then(setConvesionRate)
     StrategyTwoInterface.MIN_AK_TOKEN_AMOUNT().then(amout => setMinAkTokenAmount(window.web3.utils.fromWei(amout, "ether")))
-  })
+    //console.log({ users })
+    if (users !== undefined)
+      calculateData(users)
+    if (users === undefined || users.balance === '0') return;
+
+    const timer = setInterval(async () => {
+
+
+      console.log('timer', finalData)
+
+
+      if (finalData.remainingTime !== undefined) {
+        //console.log("finalData start", finalData);
+        //console.log('timer in setInterval :', timer);
+        let remaing = await calculateData(users);
+        console.log('in timer ', remaing)
+        setRemainingTimeFormatted(remaing);
+        //remaing.hasEnded = true;
+
+        if (!remaing.negative) {
+          clearInterval(timer);
+          NotificationManager.info("Your stake has ended, Now you can unstake your tokens !");
+          setRemainingTimeFormatted(timeToDate(0))
+        }
+
+      }
+    }, 1000)
+
+    return () => {
+      clearInterval(timer)
+    }
+
+
+  }, [users])
+
+  async function calculateData(users) {
+
+    console.log('calculateData', { users })
+    const { balance, duration, firstDepositTime, lastDepositTime } = users;
+    const durationSecconds = await StrategyTwoInterface.calculateDuration(duration)
+    const endDate = durationSecconds !== '0' ? new Date(parseInt(durationSecconds) * 1000) : 0;
+    const startDate = firstDepositTime !== '0' ? new Date(parseInt(firstDepositTime) * 1000) : 0;
+    const lastDate = lastDepositTime !== '0' ? new Date(parseInt(lastDepositTime) * 1000) : 0
+
+
+    const remainingTime = (durationSecconds === "0" || firstDepositTime === '0') ? 0 :
+      //         oggi                                   0 
+      (new Date().getTime() / 1000) - ((parseInt(firstDepositTime) + parseInt(durationSecconds)));
+    const durationDateParse = durationSecconds === "0" ? 0 : timeToDate(durationSecconds);
+    const remainingTimeParse = timeToDate(remainingTime);
+    const amountEth = window.web3.utils.fromWei(balance.toString(), 'ether');
+
+
+    setFinalData({
+      startDate,
+      endDate,
+      lastDate,
+      remainingTime,
+      amountEth,
+      durationSecconds,
+      durationDateParse
+    })
+
+    return remainingTimeParse;
+
+
+  }
+
+  //                 12312412712
+  function timeToDate(secconds) {
+    console.log('timetoDate', secconds, (new Error()).stack)
+    if (secconds === 0)
+      return { yars: 0, months: 0, days: 0, hours: 0, minutes: 0, secconds: 0, negative: false }
+
+    const negative = secconds < 0;
+    secconds = Math.abs(secconds);
+    ////      3,5   =>  3   0,5 anni 
+    const yars = Math.floor(secconds / 31536000);
+    secconds = secconds - (yars * 31536000); /// 0.534 anni ins seccondi 
+    // 6,67 mesi   6 mesi  = > 0.67  
+    const months = Math.floor(secconds / 2592000);
+    secconds = secconds - (months * 2592000);
+
+    const days = Math.floor(secconds / 86400);
+    secconds = secconds - (days * 86400);
+
+    const hours = Math.floor(secconds / 3600);
+    secconds = secconds - (hours * 3600);
+
+    const minutes = Math.floor(secconds / 60);
+    secconds = Math.floor(secconds - (minutes * 60));
+
+    console.warn({ yars, months, days, hours, minutes, secconds, negative })
+    return { yars, months, days, hours, minutes, secconds, negative }
+  }
+
 
   const handleDurationChange = (event) => {
     setDuration(event.target.value);
@@ -322,6 +425,30 @@ export default function FormAcc() {
                   Sell AkToken
                 </button>
               </div>
+            </div>
+            <div style={styles.summary}>
+              <h4 style={styles.summaryTitle}>Transaction data</h4>
+              <table style={styles.timemargin}>
+                <tbody style={styles.font} >
+                  <tr style={styles.timemargin}>
+                    <td><strong>EndDate:</strong></td>
+                    <td style={styles.time}>
+                      {/*JSON.stringify(remainingTimeFormatted)*/}
+                      {remainingTimeFormatted.isNegative ? ":" : ""}
+                      {remainingTimeFormatted.yars} years,
+                      {remainingTimeFormatted.months} months,
+                      {remainingTimeFormatted.days} days,
+                      {remainingTimeFormatted.hours} hours,
+                      {remainingTimeFormatted.minutes} minutes,
+                      {remainingTimeFormatted.secconds} seconds
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>StartDate:</strong></td>
+                    <td style={styles.time}>{finalData.startDate ? finalData.startDate.toLocaleString() : ""}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
             <h4>* You may not sell all the tokens purchased ,but you must leave until the agreed duration the amount corresponding to the first deposit</h4>
           </form>

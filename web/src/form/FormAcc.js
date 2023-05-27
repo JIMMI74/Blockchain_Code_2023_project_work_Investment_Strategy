@@ -58,14 +58,16 @@ const styles = {
   },
   formSection: {
     marginBottom: "50px",
+    gap: "20px",
 
 
   },
   label: {
     fontSize: "16px",
     fontWeight: "bold",
-    marginBottom: "8px",
+    marginBottom: "20px",
     justifyContent: "center",
+
   },
   input: {
     width: "100%",
@@ -105,12 +107,16 @@ const styles = {
   },
   conversion: {
     display: "flex",
-    fontSize: "18px",
+    fontSize: "26px",
     color: "#613b1e",
     fontStyle: "italic",
-  },
-  buttonw: {
+    display: "flex",
+    justifyContent: "center",
+    paddingBottom: "20px",
 
+  },
+
+  buttonw: {
     backgroundColor: "#e3242d",
     color: "white",
     padding: "12px 24px",
@@ -135,6 +141,15 @@ const styles = {
     marginBottom: "10px",
     fontSize: "20px",
     fontFamily: "Italic",
+  },
+  buy: {
+    fontFamily: "Italic",
+    marginBottom: "10px",
+    fontSize: "2rem",
+    color: "#b5b35c",
+    textShadow: "2px 2px 2px #000000",
+    paddingBottom: "2rem",
+
   },
 
 };
@@ -177,7 +192,7 @@ export default function FormAcc({ users }) {
 
         if (!remaing.negative) {
           clearInterval(timer);
-          NotificationManager.info("Your stake has ended, Now you can unstake your tokens !");
+          NotificationManager.info("The accumulation plan has ended , renew it !");
           setRemainingTimeFormatted(timeToDate(0))
         }
 
@@ -362,7 +377,7 @@ export default function FormAcc({ users }) {
         <div style={styles.formContainer}>
           <form style={styles.form} ref={formRefBuy}>
             <div style={styles.formSection}>
-              <h3>Buy AkToken</h3>
+              <h3 style={styles.buy}><strong>Buy AkToken</strong></h3>
               <label style={styles.label} htmlFor="amount">
                 Please enter the deposit amount
               </label>
@@ -401,8 +416,9 @@ export default function FormAcc({ users }) {
                 Buy AkToken
               </button>
             </div>
-            <div style={styles.conversion}>
-              <h3>Conversion rate AkToken/USDTCash: <strong><mark>{amountInCash}</mark></strong> </h3></div>
+            <div>
+              <h2 style={styles.conversion}><strong>AkToken/USDT</strong>  = <strong><mark>{amountInCash}</mark></strong> </h2>
+            </div>
           </form>
           <form style={styles.form} ref={formRefWhitdraw}>
             <div style={styles.formSection}>

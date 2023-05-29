@@ -54,7 +54,7 @@ const Home = () => {
         NotificationManager.success(
           "Complimenti !! Hai messo in Staking " +
           (window.web3.utils.fromWei(amount, "ether")) +
-          " CashToken. BN: " +
+          " USDT. BN: " +
           blockNumber
         );
         reloadAllBalances();
@@ -68,11 +68,11 @@ const Home = () => {
         const { user, amount, reward } = dati.returnValues;
         if (user === account) {
           NotificationManager.success(
-            "Complimenti!! per il tuo staking hai ricevuto " +
-            (window.web3.utils.fromWei(amount, "ether")) +
-            "+ gain derivanti dallo stake pari a CashToken " +
-            (window.web3.utils.fromWei(reward, "ether")) +
-            " ,vedi Transazione inserito nel BN: " +
+            "Complimenti!! per il tuo staking hai ricevuto nel tuo wallet un totale di : " +
+            (window.web3.utils.fromWei(amount, "ether")) + " USDT. " +
+            "Interessi ricevuti dallo stake : " +
+            (window.web3.utils.fromWei(reward, "ether")) + " USDT. " +
+            "Transazione inserita nel BN: " +
             blockNumber
           );
           reloadAllBalances();
@@ -95,7 +95,7 @@ const Home = () => {
 
 
           NotificationManager.success(
-            "L'operazione di acquisto di " + akkTokenAmountInEth + " AKKToken è andata a buon fine! Hai speso " + usdtCashAmountInEth + " CashToken, sottoscrivendo un piano di versamenti per la durata di " + durationString + " giorni. La transazione è stata registrata sulla Blockchain al BN: " + blockNumber
+            "L'operazione di acquisto di " + akkTokenAmountInEth + " AKKToken è andata a buon fine! Hai speso " + usdtCashAmountInEth + " USDT, sottoscrivendo un piano di versamenti per la durata di " + durationString + " giorni. La transazione è stata registrata sulla Blockchain al BN: " + blockNumber
           );
           reloadAllBalances();
         } else {
@@ -130,7 +130,7 @@ const Home = () => {
         if (amount !== undefined) {
           const BalanceInEth = window.web3.utils.fromWei(amount.toString(), "ether");
           NotificationManager.success(
-            "Rimnagono depositati nel tuo contratto:" + BalanceInEth + " AkToken"
+            "Rimangono depositati nel tuo contratto:" + BalanceInEth + " AkToken"
           );
           reloadAllBalances();
         } else {

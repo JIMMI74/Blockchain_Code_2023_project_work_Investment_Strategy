@@ -291,7 +291,23 @@ export default function FormStake({ stakedData }) {
       } else if (error.message.includes("Not enough tokens")) {
         // Mostra un messaggio di errore all'utente
         NotificationManager.error("Not enough tokens!");
-      } else {
+      } else if (error.message.includes("Invalid stake duration")) {
+        // Mostra un messaggio di errore all'utente
+        NotificationManager.error("Invalid stake duration");
+      } else if (error.message.includes("No staked tokens")) {
+        // Mostra un messaggio di errore all'utente
+        NotificationManager.error("No staked tokens");
+      } else if (error.message.includes("Minimum stake period not reached")) {
+        // Mostra un messaggio di errore all'utente
+        NotificationManager.error("Minimum stake period not reached");
+      } else if (error.message.includes("Already unstaked")) {
+        // Mostra un messaggio di errore all'utente
+        NotificationManager.error("Already unstaked");
+      } else if (error.message.includes("Insufficient coupon balance")) {
+        // Mostra un messaggio di errore all'utente
+        NotificationManager.error("Insufficient coupon balance");
+      }
+      else {
         // Gestisci altri errori o mostra un messaggio di errore generico
         NotificationManager.error("An error occurred, Please try again.");
       }
@@ -318,7 +334,7 @@ export default function FormStake({ stakedData }) {
     function handleError(error) {
       if (error.message.includes("No staked tokens")) {
 
-        NotificationManager.error("There are no staked CashTokens !");
+        NotificationManager.error("There are no staked USDT !");
       } else if (error.message.includes("Minimum stake period not reached")) {
 
         NotificationManager.error("Minimum stake period not reached !");
@@ -352,7 +368,7 @@ export default function FormStake({ stakedData }) {
                 type="number"
                 id="amount"
                 name="amount"
-                placeholder="ETH"
+                placeholder="USDT"
                 required
                 style={styles.input}
               />

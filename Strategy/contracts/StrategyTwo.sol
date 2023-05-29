@@ -77,6 +77,7 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
             revert("NO VALID DURATION");
         }
     }
+    
     function buyAkkToken(
         uint256 _amount, // akktoken
         AccumulationDuration _duration

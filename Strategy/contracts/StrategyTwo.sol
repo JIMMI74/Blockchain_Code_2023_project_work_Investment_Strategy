@@ -28,6 +28,7 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
     }
 
     enum AccumulationDuration {
+        ZERO, // NO Duration
         DEV, // Durata di 10 secondi per il test dello sviluppatore 0
         FIVE_YEARS, // Durata di 5 anni  1
         TEN_YEARS, // Durata di 10 anni  2
@@ -61,7 +62,9 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
         rate = _rate;
     }
     function calculateDuration(AccumulationDuration _duration) public pure returns (uint256){
-        if(_duration == AccumulationDuration.DEV){
+        if(_duration == AccumulationDuration.ZERO){
+            return 0;
+        }else if(_duration == AccumulationDuration.DEV){
             return 10;
         }else if(_duration == AccumulationDuration.FIVE_YEARS){
             return 60*60*24*365*5;
@@ -89,14 +92,22 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
 
         require(akkTokenAmount >= MIN_AK_TOKEN_AMOUNT, "Amount too low");
         require(
+            _duration == AccumulationDuration.ZERO ||
             _duration == AccumulationDuration.DEV ||
                 _duration == AccumulationDuration.FIVE_YEARS ||
                 _duration == AccumulationDuration.TEN_YEARS ||
                 _duration == AccumulationDuration.FIFTEEN_YEARS,
             "Invalid duration"
         );
-
-       
+        // se non ho un contrato chiuso la duration deve essere diversa da ZERO 
+        //     l'utenete sta compranto sbagliano enum 
+        // se ho un contrato aperto => first deposit != 0
+        //     la duration deve essere ZERO 
+        if (users[msg.sender].firstDepositTime == 0) {
+            require(_duration != AccumulationDuration.ZERO, "Invalid duration");
+        } else {        
+            require(_duration == AccumulationDuration.ZERO, "Invalid duration"); // evitare che qulcuno depositi on duration gia' presente
+        }
 
         // Approva l'importo per il trasferimento dei cash token
         SafeERC20.safeIncreaseAllowance(usdtCash, msg.sender, usdtCashAmount); /// fino a qua
@@ -173,7 +184,7 @@ contract StrategyTwo is Ownable, ReentrancyGuard {
             // 0 => 0
             users[msg.sender].firstDepositTime = 0;
             users[msg.sender].lastDepositTime = 0;
-            users[msg.sender].duration = AccumulationDuration.DEV;
+            users[msg.sender].duration = AccumulationDuration.ZERO;
         }
 
         // Brucia gli AkToken ricevuti dall'utente

@@ -165,6 +165,7 @@ export default function FormAcc({ users }) {
   const [minAkTokenAmount, setMinAkTokenAmount] = useState(0);
   const [remainingTimeFormatted, setRemainingTimeFormatted] = useState("non settato");
   const [finalData, setFinalData] = useState({});
+  const [isDisabledDurationSelector, setDisabledDurationSelector] = useState(false);
 
 
 
@@ -223,6 +224,7 @@ export default function FormAcc({ users }) {
     const remainingTimeParse = timeToDate(remainingTime);
     const amountEth = window.web3.utils.fromWei(balance.toString(), 'ether');
 
+    setDisabledDurationSelector(firstDepositTime !== '0')
 
     setFinalData({
       startDate,
@@ -263,7 +265,7 @@ export default function FormAcc({ users }) {
     const minutes = Math.floor(secconds / 60);
     secconds = Math.floor(secconds - (minutes * 60));
 
-    console.warn({ yars, months, days, hours, minutes, secconds, negative })
+    //console.warn({ yars, months, days, hours, minutes, secconds, negative })
     return { yars, months, days, hours, minutes, secconds, negative }
   }
 
@@ -287,7 +289,7 @@ export default function FormAcc({ users }) {
       alert("You must choose an amount to continue!");
       return;
     }
-    if (!duration) {
+    if (!duration && users.firstDepositTime === '0') { // se e la prima volta che compra deve darmi una duration
       alert("To continue you must enter the duration of the plan!");
       return;
     }
@@ -302,9 +304,9 @@ export default function FormAcc({ users }) {
     }
 
     setDefaultAddressContracts(accounts[0])
-
+    let durationNew = (duration === undefined || duration === "") ? 0 : duration; // se undefined metto 0 else metto duration
     console.log('approve Plane Contract', await USDTCashInterface.approve(StrategyTwoInterface.address, amountEth, accounts[0]).catch(handleError))
-    console.log('Buy AkToken for Contract PLane', await StrategyTwoInterface.buyAkkToken(accounts[0], amountEth, duration).catch(handleError));
+    console.log('Buy AkToken for Contract PLane', await StrategyTwoInterface.buyAkkToken(accounts[0], amountEth, durationNew).catch(handleError));
 
     function handleError(error) {
       if (error.message.includes("Can not buy 0 AkkToken")) {
@@ -316,6 +318,8 @@ export default function FormAcc({ users }) {
       } else if (error.message.includes("Amount too low")) {
         // Mostra un messaggio di errore all'utente
         NotificationManager.error("Amount too low !  minimum deposit of 10 AkTokens is required to complete the transaction.");
+      } else if (error.message.includes("Invalid duration")) {
+        NotificationManager.error("Invalid duration");
       } else {
         // Gestisci altri errori o mostra un messaggio di errore generico
         NotificationManager.error("An error occurred while purchasing AkkToken. Please try again.");
@@ -368,6 +372,7 @@ export default function FormAcc({ users }) {
     const cashInEth = (e.target.value / convesionRate).toString()
     setAmountInCash(cashInEth);
   }
+
   return (
     <div style={styles.container}>
       <p style={styles.note}>
@@ -399,11 +404,13 @@ export default function FormAcc({ users }) {
                 value={duration}
                 onChange={handleDurationChange}
                 required
+                disabled={isDisabledDurationSelector}
                 style={styles.input}
               >
-                <option value="">Duration </option>
+                <option value="" >Duration </option>
                 {Object.entries(StrategyTwoInterface.AccumulationDuration).map(
                   ([key, value]) => {
+                    if (key === 'ZERO') return;
                     return (
                       <option key={key} value={value}>
                         {key}
